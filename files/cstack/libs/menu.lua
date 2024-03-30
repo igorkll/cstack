@@ -18,9 +18,18 @@ function menu.defaultColors()
     term.setTextColor(colors.white)
 end
 
-function menu.menu(title, callbacks)
-    menu.defaultColors()
+function menu.invertColors()
+    local bg, fg = term.getBackgroundColor(), term.getTextColor()
+    term.setBackgroundColor(fg)
+    term.setTextColor(bg)
+end
+
+function menu.menu(title, strs, callbacks)
+    term.clear()
     menu.centerPrint(2, title)
+    for i, str in ipairs(strs) do
+        menu.centerPrint(i + 3, str)
+    end
 end
 
 return menu

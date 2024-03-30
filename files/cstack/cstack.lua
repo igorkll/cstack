@@ -8,9 +8,10 @@ if not settings.get(settingsFlag, false) then
     settings.save()
 end
 
-package.path = package.path .. ";/cstack/libs/?.lua"
-
 shell.run("/cstack/shell.lua")
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
+print("")
 print("shell execution aborted.")
 print("press enter to continue.")
 while true do
