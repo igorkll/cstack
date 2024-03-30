@@ -1,10 +1,11 @@
 multishell.setTitle(multishell.getCurrent(), "cstack")
-shell.openTab("worm")
 
 local function mathElements()
     for _, snippet in ipairs(cstack.config.snippets) do
-        snippet.sizeX = snippet.sizeX or (#(snippet.title) + 2)
+        snippet.sizeX = snippet.sizeX or (#(snippet.title or "") + 2)
         snippet.sizeY = snippet.sizeY or 2
+        snippet.color = snippet.color or colors.orange
+        snippet.textcolor = snippet.textcolor or colors.white
     end
 end
 
@@ -12,7 +13,7 @@ local function redraw()
     term.clear(colors.black)
 
     for _, snippet in ipairs(cstack.config.snippets) do
-        local textColor = colors.white
+        local textColor = snippet.textcolor
         if snippet.color == textColor then
             textColor = colors.black
         end
@@ -22,6 +23,8 @@ local function redraw()
 
     gfx.set(1, 1, colors.red, colors.white, "cstackOS")
 end
+
+mathElements()
 redraw()
 
 while true do
@@ -36,13 +39,15 @@ while true do
             elseif element.file then
                 shell.openTab(element.file)
             end
-        else
+        elseif eventData[2] == 2 then
             menu.context(eventData[3], eventData[4], {
                 {
                     title = "create command snipped",
                     active = true,
                     callback = function()
-                        
+                        table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
+                        mathElements()
+                        cstack.saveConfig()
                     end
                 },
                 {
