@@ -8,6 +8,8 @@ if not settings.get(settingsFlag, false) then
     settings.save()
 end
 
+package.path = package.path .. ";/cstack/libs/?.lua"
+
 shell.run("/cstack/shell.lua")
 print("shell execution aborted.")
 print("press enter to continue.")
