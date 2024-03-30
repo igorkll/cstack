@@ -1,7 +1,6 @@
 local menu = require("libs/menu")
 
-term.setBackgroundColor(colors.lightBlue)
-term.setTextColor(colors.white)
+menu.defaultColors()
 
 menu.menu("test", {
     "test1",
