@@ -1,19 +1,10 @@
-local menu = require("libs/menu")
+local function redraw()
+    
+end
 
-menu.defaultColors()
-
-menu.menu("test", {
-    "test1",
-    "test2",
-    "worm"
-}, {
-    function ()
-        
-    end,
-    function ()
-        
-    end,
-    function ()
-        shell.run("worm")
-    end,
-})
+while true do
+    local eventData = {os.pullEventRaw()}
+    if eventData[1] == "terminate" then
+        os.shutdown()
+    end
+end
