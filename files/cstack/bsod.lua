@@ -47,8 +47,16 @@ while true do
     term.setCursorPos(0, sizeY - 1)
     term.clearLine()
     centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint] .. "]")
-    if menuPoints[currentPoint - 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint - 1] .. "]", -offsetSize) end
-    if menuPoints[currentPoint + 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint + 1] .. "]", offsetSize) end
+    if sizeX >= 39 then
+        if menuPoints[currentPoint - 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint - 1] .. "]", -offsetSize) end
+        if menuPoints[currentPoint + 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint + 1] .. "]", offsetSize - 1) end
+    else
+        term.setCursorPos(3, sizeY - 1)
+        term.write("<<")
+
+        term.setCursorPos(sizeX - 3, sizeY - 1)
+        term.write(">>")
+    end
     
     local eventData = {os.pullEventRaw()}
     if eventData[1] == "terminate" then
