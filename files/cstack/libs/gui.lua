@@ -15,11 +15,12 @@ function gui.context(x, y, actions)
 
     local function redraw()
         gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
-        gfx.fill(x, y, sizeX, sizeY, colors.white)
         for i, action in ipairs(actions) do
             if i == selected then
+                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.blue)
                 gfx.set(x + 1, (y + i) - 1, colors.blue, colors.white, action.title)
             else
+                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white)
                 gfx.set(x + 1, (y + i) - 1, colors.white, action.active and colors.black or colors.lightGray, action.title)
             end
         end
@@ -34,22 +35,23 @@ function gui.context(x, y, actions)
             local newSelected = (eventData[4] - y) + 1
             if eventData[3] >= x and eventData[3] < x + sizeX then
                 if newSelected >= 1 and newSelected <= #actions then
-                    holded = false
+                    holded = true
                     if actions[newSelected].active then
                         selected = newSelected
                     end
-                end
-            end
-        elseif eventData[1] == "mouse_up" then
-            if holded then
-                if selected then
-                    if actions[selected].callback then
-                        actions[selected].callback()
-                    end
-                    return selected
+                else
+                    break
                 end
             else
                 break
+            end
+            redraw()
+        elseif eventData[1] == "mouse_up" then
+            if selected then
+                if actions[selected].callback then
+                    actions[selected].callback()
+                end
+                return selected
             end
         end
     end
