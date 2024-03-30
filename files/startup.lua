@@ -20,4 +20,7 @@ if selfScriptPath ~= "/startup.lua" then
     return
 end
 
+--------------------------------------- run cstack
+term.clear()
+term.setCursorPos(1, 1)
 shell.run("/cstack/startup.lua")
