@@ -29,7 +29,8 @@ function gui.context(x, y, actions)
 
     while true do
         local eventData = {os.pullEvent()}
-        if eventData[1] == "mouse_click" or eventData[1] == "mouse_drag" then
+        local isClick = eventData[1] == "mouse_click"
+        if isClick or eventData[1] == "mouse_drag" then
             selected = nil
             holded = false
             local newSelected = (eventData[4] - y) + 1
@@ -39,10 +40,10 @@ function gui.context(x, y, actions)
                     if actions[newSelected].active then
                         selected = newSelected
                     end
-                else
+                elseif isClick then
                     break
                 end
-            else
+            elseif isClick then
                 break
             end
             redraw()

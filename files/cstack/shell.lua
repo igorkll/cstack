@@ -11,6 +11,17 @@ gui.context(3, 3, {
     {
         title = "TeSt",
         active = true
+    },
+    {
+        title = "TeSt 2",
+        active = false
+    },
+    {
+        title = "TeSt 3",
+        active = true
+    },{
+        title = "TeSt 4",
+        active = true
     }
 })
 redraw()
