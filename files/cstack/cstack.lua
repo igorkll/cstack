@@ -1,3 +1,7 @@
+if not term.isColor() then
+    shell.run("/cstack/bsod.lua", "\"device is not supported\"", "\"screen is not colored\"")
+end
+
 local settingsFlag = "cstack.settingsApplied"
 if not settings.get(settingsFlag, false) then
     settings.clear()
