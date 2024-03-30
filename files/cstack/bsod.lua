@@ -19,7 +19,7 @@ term.setBackgroundColor(colors.blue)
 term.setTextColor(colors.white)
 local lineNumber = 4
 for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
-    if lineNumber >= sizeY - 3 then
+    if lineNumber >= sizeY - 4 then
         centerPrint(lineNumber, "(not enough screen space)")
         break
     end
@@ -38,8 +38,14 @@ local funcs = {
         os.reboot()
     end,
     function ()
-        wipeValue = (wipeValue or 0) + 1
-        centerPrint(sizeY - 1, "%" .. math.floor(wipeValue))
+        wipeValue = (wipeValue or -1) + 1
+        term.setCursorPos(1, sizeY - 2)
+        term.clearLine()
+        if wipeValue == 0 then
+            centerPrint(sizeY - 2, "hold enter to wipe")
+        else
+            centerPrint(sizeY - 2, "%" .. math.floor(wipeValue))
+        end
         if wipeValue >= 100 then
             for _, name in ipairs(fs.list("/")) do
                 local path = "/" .. name
@@ -47,7 +53,9 @@ local funcs = {
                     fs.delete(path)
                 end
             end
-            os.reboot()
+            centerPrint(sizeY - 2, "computer is wiped")
+            sleep(1)
+            os.shutdown()
         end
     end
 }
@@ -84,5 +92,7 @@ while true do
         end
     elseif eventData[1] == "key_up" then
         wipeValue = nil
+        term.setCursorPos(1, sizeY - 2)
+        term.clearLine()
     end
 end
