@@ -9,6 +9,17 @@ function gfx.set(x, y, back, fore, text)
     term.setTextColor(colors.white)
 end
 
+function gfx.fill(x, y, sizeX, sizeY, color)
+    term.setBackgroundColor(color)
+    for ix = x, (x + sizeX) - 1 do
+        for iy = y, (y + sizeY) - 1 do
+            term.setCursorPos(ix, iy)
+            term.write(" ")
+        end
+    end
+    term.setBackgroundColor(colors.black)
+end
+
 --[[
 function gfx.copy(x, y, sizeX, sizeY)
     local dump = {sizeX = sizeX, sizeY = sizeY}

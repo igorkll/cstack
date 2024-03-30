@@ -1,24 +1,18 @@
-local gfx = require("libs/gfx")
-local gui = require("libs/gui")
 multishell.setTitle(multishell.getCurrent(), "cstack")
-
---------------------------------------
+shell.openTab("worm")
 
 local function redraw()
     gfx.set(1, 1, colors.red, colors.white, "cstackOS")
 end
 redraw()
 
-gui.context(1, 1, {
+
+gui.context(3, 3, {
     {
-        str = "TeSt",
+        title = "TeSt",
         active = true
     }
 })
-
-shell.openTab("worm")
-
---------------------------------------
 
 while true do
     local eventData = {os.pullEventRaw()}

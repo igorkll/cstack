@@ -12,6 +12,12 @@ if not settings.get(settingsFlag, false) then
     settings.save()
 end
 
+local libsPath = "/cstack/libs"
+for _, name in ipairs(fs.list(libsPath)) do
+    name = name:sub(1, #name - 4)
+    _G[name] = require(libsPath .. "/" .. name)
+end
+
 shell.run("/cstack/shell.lua")
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)

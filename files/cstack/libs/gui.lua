@@ -4,15 +4,22 @@ function gui.context(x, y, actions)
     local sizeX = 0
     local sizeY = #actions
     for i, action in ipairs(actions) do
-        local str = actions.str
-        if #str > sizeX then
-            sizeX = #str
+        local title = action.title
+        if #title > sizeX then
+            sizeX = #title
         end
     end
-    sizeX = sizeX + 3
+    sizeX = sizeX + 2
 
-    paintutils.drawFilledBox(x, y, sizeX + 1, sizeY + 1, colors.gray)
-    paintutils.drawFilledBox(x, y, sizeX, sizeY, colors.white)
+    local function redraw()
+        gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
+        gfx.fill(x, y, sizeX, sizeY, colors.white)
+        for i, action in ipairs(actions) do
+            gfx.set(x + 1, (y + i) - 1, colors.white, action.active and colors.black or colors.lightGray, action.title)
+        end
+    end
+    redraw()
+
 end
 
 return gui
