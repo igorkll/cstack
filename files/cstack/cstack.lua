@@ -12,7 +12,7 @@ shell.run("/cstack/shell.lua")
 print("shell execution aborted.")
 print("press enter to continue.")
 while true do
-    local eventData = {os.pullEvent()}
+    local eventData = {os.pullEventRaw()}
     if eventData[1] == "key" and eventData[2] == keys.enter then
         break
     end
