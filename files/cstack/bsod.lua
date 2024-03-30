@@ -18,7 +18,7 @@ centerPrint(2, " " .. (title or "BSOD") .. " ")
 term.setBackgroundColor(colors.blue)
 term.setTextColor(colors.white)
 local lineNumber = 4
-for line in string.gmatch((text or "unknown error\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213\n1213") .. "\n", "(.-)\n") do
+for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
     if lineNumber >= sizeY - 3 then
         centerPrint(lineNumber, "(not enough screen space)")
         break

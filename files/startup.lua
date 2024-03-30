@@ -16,7 +16,7 @@ end
 
 local selfScriptPath = getSelfScriptPath()
 if selfScriptPath ~= "/startup.lua" then
-    print("liked cannot be launched from here: ", selfScriptPath)
+    print("cstack cannot be launched from here: ", selfScriptPath)
     return
 end
 
