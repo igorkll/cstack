@@ -29,6 +29,7 @@ end
 
 -- menu
 local menuPoints = {"shutdown", "reboot", "wipe computer"}
+local wipeValue = 0
 local funcs = {
     function ()
         os.shutdown()
@@ -37,13 +38,17 @@ local funcs = {
         os.reboot()
     end,
     function ()
-        for _, name in ipairs(fs.list("/")) do
-            local path = "/" .. name
-            if not fs.isReadOnly(path) and not fs.isDriveRoot(path) then
-                fs.delete(path)
+        wipeValue = (wipeValue or 0) + 1
+        centerPrint(sizeY - 1, "%" .. math.floor(wipeValue))
+        if wipeValue >= 100 then
+            for _, name in ipairs(fs.list("/")) do
+                local path = "/" .. name
+                if not fs.isReadOnly(path) and not fs.isDriveRoot(path) then
+                    fs.delete(path)
+                end
             end
+            os.reboot()
         end
-        os.reboot()
     end
 }
 
@@ -77,5 +82,7 @@ while true do
             currentPoint = currentPoint + 1
             if currentPoint > #menuPoints then currentPoint = #menuPoints end
         end
+    elseif eventData[1] == "key_up" then
+        wipeValue = nil
     end
 end

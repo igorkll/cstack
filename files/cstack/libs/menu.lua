@@ -37,7 +37,7 @@ function menu.menu(title, strs, callbacks, backTitle)
         term.clear()
         menu.invertColors()
         menu.drawSelector(2)
-        menu.centerPrint(2, " " .. title .. " ")
+        menu.centerPrint(2, title)
         menu.invertColors()
 
         for i, str in ipairs(strs) do
@@ -53,13 +53,14 @@ function menu.menu(title, strs, callbacks, backTitle)
 
         if backTitle ~= true then
             term.setTextColor(colors.red)
+            local str = backTitle or "back"
             if pointer == #strs + 1 then
                 menu.invertColors()
                 menu.drawSelector(menu.sizeY() - 1)
-                menu.centerPrint(menu.sizeY() - 1, backTitle or "back")
+                menu.centerPrint(menu.sizeY() - 1, str)
                 menu.invertColors()
             else
-                menu.centerPrint(menu.sizeY() - 1, backTitle or "back")
+                menu.centerPrint(menu.sizeY() - 1, str)
             end
             term.setTextColor(textColor)
         end
