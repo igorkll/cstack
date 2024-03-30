@@ -1,5 +1,7 @@
+local gfx = require("libs/gfx")
+
 local function redraw()
-    
+    gfx.set(1, 1, colors.red, colors.white, "cstackOS")
 end
 
 while true do
