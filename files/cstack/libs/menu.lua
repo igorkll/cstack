@@ -188,7 +188,6 @@ function menu.context(x, y, actions)
                     redraw()
                 elseif action.menu then
                     menu.context(x + sizeX, eventData[4], action.menu)
-                    return selected
                 else
                     return selected
                 end
@@ -208,7 +207,7 @@ function menu.drawZoneBox(sizeX, sizeY, color)
 end
 
 function menu.input(title, default, hiddenChar)
-    local x, y, sizeX, sizeY = menu.drawZoneBox(32, 4)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() / 1.7), 4)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)
