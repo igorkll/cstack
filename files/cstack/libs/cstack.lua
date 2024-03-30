@@ -1,7 +1,7 @@
 local cstack = {}
 cstack.configPath = "/.cstackSettings"
 cstack.defaultConfig = {
-    
+    snippets = {}
 }
 
 function cstack.clone(tbl)
@@ -62,6 +62,8 @@ if fs.exists(cstack.configPath) then
     else
         cstack.config = cstack.clone(cstack.defaultConfig)
     end
+else
+    cstack.config = cstack.clone(cstack.defaultConfig)
 end
 
 return cstack
