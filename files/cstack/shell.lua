@@ -41,7 +41,24 @@ while true do
                     shell.openTab(element.file)
                 end
             else
-                
+                menu.context(eventData[3], eventData[4], {
+                    {
+                        title = "change snipped size",
+                        active = true,
+                        callback = function()
+                            table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
+                            mathElements()
+                            cstack.saveConfig()
+                        end
+                    },
+                    {
+                        title = "create code snipped",
+                        active = true,
+                        callback = function()
+                            
+                        end
+                    }
+                })
             end
         elseif eventData[2] == 2 then
             menu.context(eventData[3], eventData[4], {
