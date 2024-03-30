@@ -15,7 +15,7 @@ gui.context(3, 3, {
 })
 
 while true do
-    local eventData = {os.pullEventRaw()}
+    local eventData = {os.pullEvent()}
     if eventData[1] == "terminate" then
         os.shutdown()
     end
