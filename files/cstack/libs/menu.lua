@@ -106,7 +106,6 @@ end
 
 function menu.context(x, y, actions)
     local selected
-    local holded = false
     local sizeX = 0
     local sizeY = #actions
     for i, action in ipairs(actions) do
@@ -125,15 +124,23 @@ function menu.context(x, y, actions)
     local function redraw()
         gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
         for i, action in ipairs(actions) do
+            local posy = (y + i) - 1
             if action == true then
-                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white, colors.lightGray, "-")
+                gfx.fill(x, posy, sizeX, 1, colors.white, colors.lightGray, "-")
             else
                 if i == selected then
-                    gfx.fill(x, (y + i) - 1, sizeX, 1, colors.blue)
-                    gfx.set(x + 1, (y + i) - 1, colors.blue, colors.white, action.title)
+                    gfx.fill(x, posy, sizeX, 1, colors.blue)
+                    gfx.set(x + 1, posy, colors.blue, colors.white, action.title)
+                    if action.menu then
+                        gfx.set((x + sizeX) - 1, posy, colors.blue, colors.white, ">")
+                    end
                 else
-                    gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white)
-                    gfx.set(x + 1, (y + i) - 1, colors.white, action.active and colors.black or colors.lightGray, action.title)
+                    local col = action.active and colors.black or colors.lightGray
+                    gfx.fill(x, posy, sizeX, 1, colors.white)
+                    gfx.set(x + 1, posy, colors.white, col, action.title)
+                    if action.menu then
+                        gfx.set((x + sizeX) - 1, posy, colors.white, col, ">")
+                    end
                 end
             end
         end
@@ -145,12 +152,10 @@ function menu.context(x, y, actions)
         local isClick = eventData[1] == "mouse_click"
         if isClick or eventData[1] == "mouse_drag" then
             selected = nil
-            holded = false
             local newSelected = (eventData[4] - y) + 1
             if eventData[3] >= x and eventData[3] < x + sizeX then
                 if newSelected >= 1 and newSelected <= #actions then
                     if eventData[2] == 1 then
-                        holded = true
                         if type(actions[newSelected]) == "table" and actions[newSelected].active then
                             selected = newSelected
                         end
@@ -170,9 +175,14 @@ function menu.context(x, y, actions)
         elseif eventData[1] == "mouse_up" then
             if selected then
                 if type(actions[selected]) == "table" and actions[selected].callback then
-                    actions[selected].callback()
+                    if actions[selected].callback() then
+                        break
+                    end
+                    selected = nil
+                    redraw()
+                else
+                    return selected
                 end
-                return selected
             end
         end
     end

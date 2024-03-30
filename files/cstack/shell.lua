@@ -45,11 +45,12 @@ while true do
                     {
                         title = "change snipped size",
                         active = true,
-                        callback = function()
-                            table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
-                            mathElements()
-                            cstack.saveConfig()
-                        end
+                        menu = {
+                            {
+                                title = "test",
+                                active = true
+                            }
+                        }
                     },
                     {
                         title = "create code snipped",
@@ -69,6 +70,7 @@ while true do
                         table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
                         mathElements()
                         cstack.saveConfig()
+                        return true
                     end
                 },
                 {
