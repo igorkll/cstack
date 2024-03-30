@@ -1,1 +1,4 @@
+/bsod.lua
+/shell.lua
 /startup.lua
+/libs/menu.lua

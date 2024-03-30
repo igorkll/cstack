@@ -9,12 +9,13 @@ function menu.sizeY()
 end
 
 function menu.centerPrint(y, text)
-    term.setCursorPos((menu.sizeX() / 2) - (#text / 2), y)
+    term.setCursorPos(((menu.sizeX() / 2) - (#text / 2)) + 1, y)
+    term.write(text)
 end
 
 function menu.defaultColors()
     term.setBackgroundColor(colors.black)
-    term.setForegroundColor(colors.white)
+    term.setTextColor(colors.white)
 end
 
 function menu.menu(title, callbacks)

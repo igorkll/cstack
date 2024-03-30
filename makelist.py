@@ -25,6 +25,6 @@ def write_paths_to_file(file_paths, output_file):
 
 if __name__ == "__main__":
     current_directory = os.path.dirname(os.path.abspath(__file__))
-    system_directory = os.path.join(current_directory, 'cstack')
+    system_directory = os.path.join(current_directory, 'files')
 
     write_paths_to_file(recursive_file_paths_without_folder(system_directory), os.path.join(current_directory, 'installer/filelist.txt'))
