@@ -7,7 +7,7 @@ local function redraw()
 end
 
 redraw()
-gui.context(3, 3, {
+menu.context(3, 3, {
     {
         title = "TeSt",
         active = true
