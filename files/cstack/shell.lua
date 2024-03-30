@@ -33,7 +33,11 @@ while true do
         if element then
             if eventData[2] == 1 then
                 if element.command then
+                    term.setCursorPos(1, 1)
+                    menu.defaultColors()
+                    term.clear()
                     shell.run(element.command)
+                    term.setCursorBlink(false)
                 elseif element.file then
                     shell.openTab(element.file)
                 end
