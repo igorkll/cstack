@@ -119,6 +119,9 @@ function menu.context(x, y, actions)
     end
     sizeX = sizeX + 2
 
+    x = math.min(x, (menu.sizeX() - sizeX) + 1)
+    y = math.min(y, (menu.sizeY() - sizeY) + 1)
+
     local function redraw()
         gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
         for i, action in ipairs(actions) do
@@ -146,14 +149,21 @@ function menu.context(x, y, actions)
             local newSelected = (eventData[4] - y) + 1
             if eventData[3] >= x and eventData[3] < x + sizeX then
                 if newSelected >= 1 and newSelected <= #actions then
-                    holded = true
-                    if type(actions[newSelected]) == "table" and actions[newSelected].active then
-                        selected = newSelected
+                    if eventData[2] == 1 then
+                        holded = true
+                        if type(actions[newSelected]) == "table" and actions[newSelected].active then
+                            selected = newSelected
+                        end
+                    elseif isClick then
+                        os.queueEvent(unpack(eventData))
+                        break
                     end
                 elseif isClick then
+                    os.queueEvent(unpack(eventData))
                     break
                 end
             elseif isClick then
+                os.queueEvent(unpack(eventData))
                 break
             end
             redraw()
@@ -166,6 +176,52 @@ function menu.context(x, y, actions)
             end
         end
     end
+end
+
+function menu.mathZoneBox(sizeX, sizeY)
+    return ((menu.sizeX() / 2) - (sizeX / 2)) + 1, ((menu.sizeY() / 2) - (sizeY / 2)) + 1, sizeX, sizeY
+end
+
+function menu.drawZoneBox(sizeX, sizeY, color)
+    local x, y = menu.mathZoneBox(sizeX, sizeY)
+    gfx.fill(x, y, sizeX, sizeY, color or colors.gray)
+    return x, y, sizeX, sizeY
+end
+
+function menu.input(title, default, hiddenChar)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(32, 4)
+    gfx.set((x + sizeX) - 3, y, colors.red, colors.white, " X ")
+    menu.defaultColors()
+    menu.centerPrint(y, title or "input")
+    local readWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, 1)
+    term.redirect(readWindow)
+    if default then
+        os.queueEvent("paste", tostring(default))
+    end
+    if hiddenChar and type(hiddenChar) ~= "string" then
+        hiddenChar = "*"
+    end
+
+    local inputResult
+    parallel.waitForAny(function ()
+        local ok, input = pcall(read, hiddenChar)
+        if ok then
+            inputResult = input
+        end
+    end, function ()
+        while true do
+            local eventData = {os.pullEventRaw()}
+            if eventData[1] == "mouse_click" then
+                if eventData[4] == y and eventData[3] < (x + sizeX) and eventData[3] >= (x + sizeX) - 3 then
+                    break
+                end
+            end
+        end
+    end)
+
+    term.redirect(term.native())
+    menu.defaultColors()
+    return inputResult
 end
 
 return menu
