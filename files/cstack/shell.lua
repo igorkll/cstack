@@ -16,10 +16,12 @@ gui.context(3, 3, {
         title = "TeSt 2",
         active = false
     },
+    true,
     {
         title = "TeSt 3",
         active = true
-    },{
+    },
+    {
         title = "TeSt 4",
         active = true
     }

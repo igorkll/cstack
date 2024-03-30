@@ -9,15 +9,19 @@ function gfx.set(x, y, back, fore, text)
     term.setTextColor(colors.white)
 end
 
-function gfx.fill(x, y, sizeX, sizeY, color)
-    term.setBackgroundColor(color)
+function gfx.fill(x, y, sizeX, sizeY, back, fore, char)
+    term.setBackgroundColor(back)
+    if fore then
+        term.setTextColor(fore)
+    end
     for ix = x, (x + sizeX) - 1 do
         for iy = y, (y + sizeY) - 1 do
             term.setCursorPos(ix, iy)
-            term.write(" ")
+            term.write(char or " ")
         end
     end
     term.setBackgroundColor(colors.black)
+    term.setBackgroundColor(colors.white)
 end
 
 --[[

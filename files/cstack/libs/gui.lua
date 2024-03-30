@@ -6,9 +6,11 @@ function gui.context(x, y, actions)
     local sizeX = 0
     local sizeY = #actions
     for i, action in ipairs(actions) do
-        local title = action.title
-        if #title > sizeX then
-            sizeX = #title
+        if type(action) == "table" then
+            local title = action.title
+            if #title > sizeX then
+                sizeX = #title
+            end
         end
     end
     sizeX = sizeX + 2
@@ -16,12 +18,16 @@ function gui.context(x, y, actions)
     local function redraw()
         gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
         for i, action in ipairs(actions) do
-            if i == selected then
-                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.blue)
-                gfx.set(x + 1, (y + i) - 1, colors.blue, colors.white, action.title)
+            if action == true then
+                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white, colors.lightGray, "-")
             else
-                gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white)
-                gfx.set(x + 1, (y + i) - 1, colors.white, action.active and colors.black or colors.lightGray, action.title)
+                if i == selected then
+                    gfx.fill(x, (y + i) - 1, sizeX, 1, colors.blue)
+                    gfx.set(x + 1, (y + i) - 1, colors.blue, colors.white, action.title)
+                else
+                    gfx.fill(x, (y + i) - 1, sizeX, 1, colors.white)
+                    gfx.set(x + 1, (y + i) - 1, colors.white, action.active and colors.black or colors.lightGray, action.title)
+                end
             end
         end
     end
@@ -37,7 +43,7 @@ function gui.context(x, y, actions)
             if eventData[3] >= x and eventData[3] < x + sizeX then
                 if newSelected >= 1 and newSelected <= #actions then
                     holded = true
-                    if actions[newSelected].active then
+                    if type(actions[newSelected]) == "table" and actions[newSelected].active then
                         selected = newSelected
                     end
                 elseif isClick then
@@ -49,7 +55,7 @@ function gui.context(x, y, actions)
             redraw()
         elseif eventData[1] == "mouse_up" then
             if selected then
-                if actions[selected].callback then
+                if type(actions[selected]) == "table" and actions[selected].callback then
                     actions[selected].callback()
                 end
                 return selected
