@@ -20,4 +20,4 @@ if selfScriptPath ~= "/startup.lua" then
     return
 end
 
-shell.run("/cstack/cstack.lua")
+shell.run("/cstack/startup.lua")
