@@ -28,7 +28,7 @@ for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
 end
 
 -- menu
-local menuPoints = {"shutdown", "reboot", "wipe computer"}
+local menuPoints = {"shutdown", "reboot", "wipe computer", "open shell"}
 local wipeValue = 0
 local funcs = {
     function ()
@@ -57,6 +57,13 @@ local funcs = {
             sleep(1)
             os.shutdown()
         end
+    end,
+    function ()
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.white)
+        term.clear()
+        term.setCursorPos(1, 1)
+        shell.run("shell")
     end
 }
 
