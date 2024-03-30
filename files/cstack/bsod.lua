@@ -44,6 +44,8 @@ local funcs = {
 local currentPoint = 1
 local offsetSize = math.floor(sizeX / 3)
 while true do
+    term.setCursorPos(0, sizeY - 1)
+    term.clearLine()
     centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint] .. "]")
     if menuPoints[currentPoint - 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint - 1] .. "]", -offsetSize) end
     if menuPoints[currentPoint + 1] then centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint + 1] .. "]", offsetSize) end
