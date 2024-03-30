@@ -7,5 +7,5 @@ if code then
 else
     shell.run("/cstack/bsod.lua", "\"syntax error (cstack.lua)\"", "\"" .. tostring(err) .. "\"")
 end
-shell.run("/cstack/bsod.lua", "\"unexpected system shutdown\" \"\"")
+shell.run("/cstack/bsod.lua", "\"unexpected system shutdown\" \"execution aborted\"")
 os.reboot()
