@@ -37,7 +37,13 @@ local funcs = {
         os.reboot()
     end,
     function ()
-        
+        for _, name in ipairs(fs.list("/")) do
+            local path = "/" .. name
+            if not fs.isReadOnly(path) and not fs.isDriveRoot(path) then
+                fs.delete(path)
+            end
+        end
+        os.reboot()
     end
 }
 
