@@ -9,7 +9,7 @@ if not settings.get(settingsFlag, false) then
 end
 
 shell.run("/cstack/shell.lua")
-print("shell has completed its work.")
+print("shell execution aborted.")
 print("press enter to continue.")
 while true do
     local eventData = {os.pullEvent()}
