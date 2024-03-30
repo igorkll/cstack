@@ -120,6 +120,11 @@ function menu.context(x, y, actions)
 
     x = math.min(x, (menu.sizeX() - sizeX) + 1)
     y = math.min(y, (menu.sizeY() - sizeY) + 1)
+    for i, action in ipairs(actions) do
+        if action.active == nil then
+            action.active = true
+        end
+    end
 
     local function redraw()
         gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
@@ -206,9 +211,11 @@ function menu.input(title, default, hiddenChar)
     local x, y, sizeX, sizeY = menu.drawZoneBox(32, 4)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
-    menu.defaultColors()
+    term.setBackgroundColor(colors.gray)
+    term.setTextColor(colors.white)
     menu.centerPrint(y, title or "input")
     local readWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, 1)
+    local blick = term.getCursorBlink()
     term.redirect(readWindow)
     if default then
         os.queueEvent("paste", tostring(default))
@@ -237,6 +244,7 @@ function menu.input(title, default, hiddenChar)
     end)
 
     term.redirect(term.native())
+    term.setCursorBlink(blick)
     menu.defaultColors()
     return inputResult
 end

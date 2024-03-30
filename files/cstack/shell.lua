@@ -58,73 +58,71 @@ while true do
 
                 menu.context(eventData[3], eventData[4], {
                     {
-                        title = "change snipped size",
-                        active = true,
+                        title = "set title",
+                        callback = function()
+                            redraw()
+                            element.title = menu.input("title", element.title) or element.title
+                            mathElements()
+                            cstack.saveConfig()
+                            return true
+                        end
+                    },
+                    {
+                        title = "change size",
                         menu = {
                             {
                                 title = "automatic",
-                                active = true,
                                 callback = setSnippedSize
                             },
                             {
                                 sizeX = 8,
                                 sizeY = 2,
                                 title = "8x2",
-                                active = true,
                                 callback = setSnippedSize
                             },
                             {
                                 sizeX = 8,
                                 sizeY = 3,
                                 title = "8x3",
-                                active = true,
                                 callback = setSnippedSize
                             },
                             {
                                 sizeX = 8,
                                 sizeY = 5,
                                 title = "8x5",
-                                active = true,
                                 callback = setSnippedSize
                             },
                             {
                                 sizeX = 16,
                                 sizeY = 8,
                                 title = "16x8",
-                                active = true,
                                 callback = setSnippedSize
                             }
                         }
                     },
                     {
-                        title = "change snipped color",
-                        active = true,
+                        title = "change color",
                         menu = {
                             {
                                 title = "red",
-                                active = true,
                                 callback = setSnippedColor
                             },
                             {
                                 title = "orange",
-                                active = true,
                                 callback = setSnippedColor
                             },
                             {
                                 title = "green",
-                                active = true,
                                 callback = setSnippedColor
                             },
                             {
                                 title = "blue",
-                                active = true,
                                 callback = setSnippedColor
                             }
                         }
                     },
                     {
-                        title = "delete snipped",
-                        active = true,
+                        title = "delete",
                         callback = function()
                             table.remove(cstack.config.snippets, index)
                             return true
@@ -136,7 +134,7 @@ while true do
             menu.context(eventData[3], eventData[4], {
                 {
                     title = "create command snipped",
-                    active = true,
+                    
                     callback = function()
                         table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
                         mathElements()
@@ -146,7 +144,7 @@ while true do
                 },
                 {
                     title = "create code snipped",
-                    active = true,
+                    
                     callback = function()
                         
                     end
