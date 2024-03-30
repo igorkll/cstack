@@ -26,15 +26,30 @@ end
 
 function menu.menu(title, strs, callbacks, backTitle)
     local pointer = 1
+    local textColor = term.getTextColor()
 
     local function redraw()
         term.clear()
         menu.centerPrint(2, title)
         for i, str in ipairs(strs) do
-            menu.centerPrint(i + 3, str)
+            if pointer == i then
+                menu.invertColors()
+                menu.centerPrint(i + 3, str)
+                menu.invertColors()
+            else
+                menu.centerPrint(i + 3, str)
+            end
         end
         if backTitle ~= true then
-            menu.centerPrint(menu.sizeX() - 1, backTitle or "back")
+            term.setTextColor(colors.red)
+            if pointer == #strs + 1 then
+                menu.invertColors()
+                menu.centerPrint(menu.sizeX() - 1, backTitle or "back")
+                menu.invertColors()
+            else
+                menu.centerPrint(menu.sizeX() - 1, backTitle or "back")
+            end
+            term.setTextColor(textColor)
         end
     end
     redraw()
@@ -43,11 +58,19 @@ function menu.menu(title, strs, callbacks, backTitle)
         local eventData = {os.pullEvent()}
         if eventData[1] == "key" then
             if eventData[2] == keys.up then
-                
+                pointer = pointer - 1
+                if pointer < 1 then pointer = 1 end
             elseif eventData[2] == keys.down then
-
+                pointer = pointer + 1
+                if backTitle ~= true then
+                    if pointer > #strs + 1 then pointer = #strs + 1 end
+                else
+                    if pointer > #strs then pointer = #strs end
+                end
             elseif eventData[2] == keys.enter then
-                if callbacks[pointer] then
+                if pointer == #strs + 1 then
+                    break
+                elseif callbacks[pointer] then
                     callbacks[pointer]()
                     redraw()
                 end
