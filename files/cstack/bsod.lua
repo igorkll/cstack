@@ -26,3 +26,15 @@ for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
     centerPrint(lineNumber, line)
     lineNumber = lineNumber + 1
 end
+
+-- menu
+local menuPoints = {"shutdown", "reboot", "wipe computer"}
+local currentPoint = 1
+while true do
+    centerPrint(sizeY - 1, "[" .. menuPoints[currentPoint] .. "]")
+    local eventData = {os.pullEventRaw()}
+    if eventData[1] == "terminate" then
+        os.shutdown()
+    elseif eventData[1]
+    end
+end
