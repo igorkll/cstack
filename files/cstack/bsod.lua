@@ -6,26 +6,29 @@ local function centerPrint(y, text, offset)
     term.write(text)
 end
 
-term.setBackgroundColor(colors.blue)
-term.setTextColor(colors.white)
-term.clear()
+local function redraw()
+    term.setBackgroundColor(colors.blue)
+    term.setTextColor(colors.white)
+    term.clear()
 
-term.setBackgroundColor(colors.white)
-term.setTextColor(colors.blue)
-centerPrint(2, " " .. (title or "BSOD") .. " ")
+    term.setBackgroundColor(colors.white)
+    term.setTextColor(colors.blue)
+    centerPrint(2, " " .. (title or "BSOD") .. " ")
 
 
-term.setBackgroundColor(colors.blue)
-term.setTextColor(colors.white)
-local lineNumber = 4
-for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
-    if lineNumber >= sizeY - 4 then
-        centerPrint(lineNumber, "(not enough screen space)")
-        break
+    term.setBackgroundColor(colors.blue)
+    term.setTextColor(colors.white)
+    local lineNumber = 4
+    for line in string.gmatch((text or "unknown error") .. "\n", "(.-)\n") do
+        if lineNumber >= sizeY - 4 then
+            centerPrint(lineNumber, "(not enough screen space)")
+            break
+        end
+        centerPrint(lineNumber, line)
+        lineNumber = lineNumber + 1
     end
-    centerPrint(lineNumber, line)
-    lineNumber = lineNumber + 1
 end
+redraw()
 
 -- menu
 local menuPoints = {"shutdown", "reboot", "wipe computer", "open shell"}
@@ -64,6 +67,8 @@ local funcs = {
         term.clear()
         term.setCursorPos(1, 1)
         shell.run("shell")
+        term.setCursorBlink(false)
+        redraw()
     end
 }
 
