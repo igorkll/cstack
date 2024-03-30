@@ -1,7 +1,7 @@
 local cstack = {}
 cstack.configPath = "/.cstackSettings"
 cstack.defaultConfig = {
-    snippets = {}
+    snippets = assert(loadfile("/cstack/snippets.lua", nil, _ENV))()
 }
 
 function cstack.clone(tbl)

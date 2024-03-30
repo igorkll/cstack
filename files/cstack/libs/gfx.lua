@@ -24,6 +24,12 @@ function gfx.fill(x, y, sizeX, sizeY, back, fore, char)
     term.setBackgroundColor(colors.white)
 end
 
+function gfx.centeredText(x, y, sizeX, sizeY, back, fore, text)
+    local rx, ry = term.getSize()
+    gfx.fill(x, y, sizeX, sizeY, back)
+    gfx.set(math.floor((x + sizeX / 2) - (#text / 2)), y + math.floor((sizeY - 1) / 2), back, fore, text)
+end
+
 --[[
 function gfx.copy(x, y, sizeX, sizeY)
     local dump = {sizeX = sizeX, sizeY = sizeY}

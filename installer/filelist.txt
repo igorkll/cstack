@@ -3,4 +3,7 @@
 /cstack/cstack.lua
 /cstack/shell.lua
 /cstack/startup.lua
+/cstack/libs/cstack.lua
+/cstack/libs/gfx.lua
+/cstack/libs/gui.lua
 /cstack/libs/menu.lua

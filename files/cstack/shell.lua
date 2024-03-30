@@ -17,11 +17,8 @@ local function redraw()
         if snippet.color == textColor then
             textColor = colors.black
         end
-        gfx.fill(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor)
-        gfx.set(snippet.x + 1, snippet.y, snippet.color, textColor, snippet.title)
+        gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, snippet.title:sub(1, snippet.sizeX - 2))
     end
-
-    gfx.set(1, 1, colors.red, colors.white, "cstackOS")
 end
 
 mathElements()
@@ -59,6 +56,7 @@ while true do
                 menu.context(eventData[3], eventData[4], {
                     {
                         title = "set title",
+                        active = not element.readonly,
                         callback = function()
                             redraw()
                             element.title = menu.input("title", element.title) or element.title
@@ -69,6 +67,7 @@ while true do
                     },
                     {
                         title = "change size",
+                        active = not element.readonly,
                         menu = {
                             {
                                 title = "automatic",
@@ -102,6 +101,7 @@ while true do
                     },
                     {
                         title = "change color",
+                        active = not element.readonly,
                         menu = {
                             {
                                 title = "red",
@@ -123,8 +123,11 @@ while true do
                     },
                     {
                         title = "delete",
+                        active = not element.readonly,
                         callback = function()
                             table.remove(cstack.config.snippets, index)
+                            mathElements()
+                            cstack.saveConfig()
                             return true
                         end
                     }
