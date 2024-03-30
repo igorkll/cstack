@@ -174,12 +174,16 @@ function menu.context(x, y, actions)
             redraw()
         elseif eventData[1] == "mouse_up" then
             if selected then
-                if type(actions[selected]) == "table" and actions[selected].callback then
-                    if actions[selected].callback() then
-                        break
+                local action = actions[selected]
+                if type(action) == "table" and action.callback then
+                    if action:callback() then
+                        return selected
                     end
                     selected = nil
                     redraw()
+                elseif action.menu then
+                    menu.context(x + sizeX, eventData[4], action.menu)
+                    return selected
                 else
                     return selected
                 end

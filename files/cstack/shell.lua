@@ -32,7 +32,7 @@ while true do
     if eventData[1] == "terminate" then
         os.shutdown()
     elseif eventData[1] == "mouse_click" then
-        local _, element = gui.getCollisionElement(eventData, cstack.config.snippets)
+        local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
         if element then
             if eventData[2] == 1 then
                 if element.command then
@@ -41,22 +41,93 @@ while true do
                     shell.openTab(element.file)
                 end
             else
+                local function setSnippedColor(obj)
+                    element.color = colors[obj.title]
+                    mathElements()
+                    cstack.saveConfig()
+                    return true
+                end
+
+                local function setSnippedSize(obj)
+                    element.sizeX = obj.sizeX
+                    element.sizeY = obj.sizeY
+                    mathElements()
+                    cstack.saveConfig()
+                    return true
+                end
+
                 menu.context(eventData[3], eventData[4], {
                     {
                         title = "change snipped size",
                         active = true,
                         menu = {
                             {
-                                title = "test",
-                                active = true
+                                title = "automatic",
+                                active = true,
+                                callback = setSnippedSize
+                            },
+                            {
+                                sizeX = 8,
+                                sizeY = 2,
+                                title = "8x2",
+                                active = true,
+                                callback = setSnippedSize
+                            },
+                            {
+                                sizeX = 8,
+                                sizeY = 3,
+                                title = "8x3",
+                                active = true,
+                                callback = setSnippedSize
+                            },
+                            {
+                                sizeX = 8,
+                                sizeY = 5,
+                                title = "8x5",
+                                active = true,
+                                callback = setSnippedSize
+                            },
+                            {
+                                sizeX = 16,
+                                sizeY = 8,
+                                title = "16x8",
+                                active = true,
+                                callback = setSnippedSize
                             }
                         }
                     },
                     {
-                        title = "create code snipped",
+                        title = "change snipped color",
+                        active = true,
+                        menu = {
+                            {
+                                title = "red",
+                                active = true,
+                                callback = setSnippedColor
+                            },
+                            {
+                                title = "orange",
+                                active = true,
+                                callback = setSnippedColor
+                            },
+                            {
+                                title = "green",
+                                active = true,
+                                callback = setSnippedColor
+                            },
+                            {
+                                title = "blue",
+                                active = true,
+                                callback = setSnippedColor
+                            }
+                        }
+                    },
+                    {
+                        title = "delete snipped",
                         active = true,
                         callback = function()
-                            
+                            table.remove(cstack.config.snippets, index)
+                            return true
                         end
                     }
                 })
