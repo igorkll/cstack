@@ -179,7 +179,7 @@ function menu.context(x, y, actions)
 end
 
 function menu.mathZoneBox(sizeX, sizeY)
-    return ((menu.sizeX() / 2) - (sizeX / 2)) + 1, ((menu.sizeY() / 2) - (sizeY / 2)) + 1, sizeX, sizeY
+    return math.floor((menu.sizeX() / 2) - (sizeX / 2)) + 1, math.floor((menu.sizeY() / 2) - (sizeY / 2)) + 1, sizeX, sizeY
 end
 
 function menu.drawZoneBox(sizeX, sizeY, color)
@@ -190,7 +190,8 @@ end
 
 function menu.input(title, default, hiddenChar)
     local x, y, sizeX, sizeY = menu.drawZoneBox(32, 4)
-    gfx.set((x + sizeX) - 3, y, colors.red, colors.white, " X ")
+    local closeButtonX = (x + sizeX) - 3
+    gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     menu.defaultColors()
     menu.centerPrint(y, title or "input")
     local readWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, 1)
@@ -212,7 +213,7 @@ function menu.input(title, default, hiddenChar)
         while true do
             local eventData = {os.pullEventRaw()}
             if eventData[1] == "mouse_click" then
-                if eventData[4] == y and eventData[3] < (x + sizeX) and eventData[3] >= (x + sizeX) - 3 then
+                if eventData[4] == y and eventData[3] >= closeButtonX and eventData[3] < (x + sizeX) then
                     break
                 end
             end
