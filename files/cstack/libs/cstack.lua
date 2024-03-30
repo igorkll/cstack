@@ -1,6 +1,8 @@
 local cstack = {}
 cstack.configPath = "/.cstackSettings"
-cstack.defaultConfig = {}
+cstack.defaultConfig = {
+    
+}
 
 function cstack.clone(tbl)
     local newtbl = {}
@@ -34,11 +36,29 @@ function cstack.writeFile(path, data)
     return true
 end
 
-if fs.exists(cstack.configPath) then
-    local cfg = cstack.readFile(cstack.configPath)
-    if cfg then
-        textutils.unserialize(cfg)
+function cstack.readTable(path)
+    local cfg, err = cstack.readFile(path)
+    if not cfg then return nil, err end
+    return textutils.unserialize(cfg)
+end
 
+function cstack.writeTable(path, tbl)
+    return cstack.writeFile(path, textutils.serialize(tbl))
+end
+
+function cstack.saveConfig()
+    return cstack.writeTable(cstack.configPath, cstack.config)
+end
+
+if fs.exists(cstack.configPath) then
+    local cfg = cstack.readTable(cstack.configPath)
+    if cfg then
+        for k, v in pairs(cstack.defaultConfig) do
+            if not cfg[k] then
+                cfg[k] = cstack.defaultConfig[k]
+            end
+        end
+        cstack.config = cfg
     else
         cstack.config = cstack.clone(cstack.defaultConfig)
     end
