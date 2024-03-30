@@ -216,6 +216,8 @@ function menu.input(title, default, hiddenChar)
                 if eventData[4] == y and eventData[3] >= closeButtonX and eventData[3] < (x + sizeX) then
                     break
                 end
+            elseif eventData[1] == "terminate" then
+                break
             end
         end
     end)

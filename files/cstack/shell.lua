@@ -34,10 +34,14 @@ while true do
     elseif eventData[1] == "mouse_click" then
         local _, element = gui.getCollisionElement(eventData, cstack.config.snippets)
         if element then
-            if element.command then
-                shell.run(element.command)
-            elseif element.file then
-                shell.openTab(element.file)
+            if eventData[2] == 1 then
+                if element.command then
+                    shell.run(element.command)
+                elseif element.file then
+                    shell.openTab(element.file)
+                end
+            else
+                
             end
         elseif eventData[2] == 2 then
             menu.context(eventData[3], eventData[4], {
