@@ -2,6 +2,18 @@ local cstack = {}
 cstack.configPath = "/.cstackSettings"
 cstack.defaultConfig = {}
 
+function cstack.clone(tbl)
+    local newtbl = {}
+    for k, v in pairs(tbl) do
+        if type(v) == "table" then
+            newtbl[k] = cstack.clone(v)
+        else
+            newtbl[k] = v
+        end
+    end
+    return newtbl
+end
+
 function cstack.readFile(path)
     local file, err = fs.open(path, "rb")
     if not file then
@@ -23,7 +35,13 @@ function cstack.writeFile(path, data)
 end
 
 if fs.exists(cstack.configPath) then
-    cstack.readFile(cstack.configPath)
+    local cfg = cstack.readFile(cstack.configPath)
+    if cfg then
+        textutils.unserialize(cfg)
+
+    else
+        cstack.config = cstack.clone(cstack.defaultConfig)
+    end
 end
 
 return cstack
