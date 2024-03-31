@@ -1,7 +1,11 @@
 multishell.setTitle(multishell.getCurrent(), "cstack")
 
+local currentPage = 0
+local selectedSnippedX, selectedSnippedY, selectedSnipped
+
 local function mathElements()
     for _, snippet in ipairs(cstack.config.snippets) do
+        snippet.page = snippet.page or currentPage
         snippet.sizeX = snippet.sizeX or (#(snippet.title or "") + 2)
         snippet.sizeY = snippet.sizeY or 2
         snippet.color = snippet.color or colors.orange
@@ -13,12 +17,20 @@ local function redraw()
     term.clear(colors.black)
 
     for _, snippet in ipairs(cstack.config.snippets) do
-        local textColor = snippet.textcolor
-        if snippet.color == textColor then
-            textColor = colors.black
+        if snippet.page == currentPage then
+            local textColor = snippet.textcolor
+            if snippet.color == textColor then
+                textColor = colors.black
+            end
+            gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, snippet.title:sub(1, snippet.sizeX - 2))
         end
-        gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, snippet.title:sub(1, snippet.sizeX - 2))
     end
+end
+
+local function save()
+    mathElements()
+    cstack.saveConfig()
+    redraw()
 end
 
 mathElements()
@@ -28,9 +40,21 @@ while true do
     local eventData = {os.pullEvent()}
     if eventData[1] == "terminate" then
         os.shutdown()
+    elseif eventData[1] == "mouse_drag" then
+        if selectedSnipped then
+            local x, y = eventData[3], eventData[4]
+            local dx, dy = x - selectedSnippedX, y - selectedSnippedY
+            selectedSnipped.x = selectedSnipped.x + dx
+            selectedSnipped.y = selectedSnipped.y + dy
+            selectedSnippedX, selectedSnippedY = x, y
+            save()
+        end
     elseif eventData[1] == "mouse_click" then
         local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
-        if element then
+        if element and element.page == currentPage then
+            selectedSnipped = element
+            selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
+
             if eventData[2] == 1 then
                 if element.command then
                     term.setCursorPos(1, 1)
@@ -44,16 +68,14 @@ while true do
             else
                 local function setSnippedColor(obj)
                     element.color = colors[obj.title]
-                    mathElements()
-                    cstack.saveConfig()
+                    save()
                     return true
                 end
 
                 local function setSnippedSize(obj)
                     element.sizeX = obj.sizeX
                     element.sizeY = obj.sizeY
-                    mathElements()
-                    cstack.saveConfig()
+                    save()
                     return true
                 end
 
@@ -64,8 +86,7 @@ while true do
                         callback = function()
                             redraw()
                             element.title = menu.input("title", element.title) or element.title
-                            mathElements()
-                            cstack.saveConfig()
+                            save()
                             return true
                         end
                     },
@@ -130,8 +151,7 @@ while true do
                         active = not element.readonly,
                         callback = function()
                             table.remove(cstack.config.snippets, index)
-                            mathElements()
-                            cstack.saveConfig()
+                            save()
                             return true
                         end
                     }
@@ -144,8 +164,7 @@ while true do
                     
                     callback = function()
                         table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
-                        mathElements()
-                        cstack.saveConfig()
+                        save()
                         return true
                     end
                 },
@@ -159,5 +178,7 @@ while true do
             })
         end
         redraw()
+    elseif eventData[1] == "mouse_up" then
+        selectedSnippedX, selectedSnippedY, selectedSnipped = nil, nil, nil
     end
 end
