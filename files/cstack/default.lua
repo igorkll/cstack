@@ -4,7 +4,7 @@ local defaultConfig = {
     snippets = {
         {
             x = 1,
-            y = ry,
+            y = math.huge,
             sizeX = 2,
             sizeY = 1,
             title = "<<",
@@ -14,7 +14,7 @@ local defaultConfig = {
         },
         {
             x = 3,
-            y = ry,
+            y = math.huge,
             sizeX = 2,
             sizeY = 1,
             title = "HM",
@@ -24,7 +24,7 @@ local defaultConfig = {
         },
         {
             x = rx - 1,
-            y = ry,
+            y = math.huge,
             sizeX = 2,
             sizeY = 1,
             title = ">>",
@@ -34,12 +34,13 @@ local defaultConfig = {
         },
         {
             x = 5,
-            y = ry,
+            y = math.huge,
             sizeX = rx - 6,
             sizeY = 1,
             title = "page: ",
             smartTitle = "getPage",
-            color = colors.gray
+            color = colors.gray,
+            mode = -1
         },
 
 
@@ -52,18 +53,9 @@ local defaultConfig = {
             sizeY = 1,
             title = "shell",
             color = colors.orange,
-            command = "shell"
-        },
-        {
-            page = 0,
-            x = 1,
-            y = 2,
-            sizeX = 16,
-            sizeY = 1,
-            title = "shell",
-            color = colors.orange,
-            command = "shell"
-        },
+            command = "shell",
+            mode = 1
+        }
     },
     pageinfo = {
         [0] = {

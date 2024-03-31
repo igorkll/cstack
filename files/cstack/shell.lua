@@ -30,6 +30,25 @@ local function getPageInfo()
     return {}
 end
 
+local function localMathElements()
+    local snippets = {}
+    for _, snippet in ipairs(cstack.config.snippets) do
+        local lSnippet = cstack.clone(snippet)
+        if lSnippet.sizeX > math.huge then
+            lSnippet.sizeX = menu.sizeX()
+        elseif lSnippet.sizeX < -math.huge then
+            lSnippet.sizeX = 0
+        end
+        if lSnippet.sizeY > math.huge then
+            lSnippet.sizeY = menu.sizeY()
+        elseif lSnippet.sizeY < -math.huge then
+            lSnippet.sizeY = 0
+        end
+        table.insert(snippets, lSnippet)
+    end
+    return snippets
+end
+
 local function mathElements()
     for _, snippet in ipairs(cstack.config.snippets) do
         snippet.sizeX = snippet.sizeX or (#(snippet.title or "") + 2)
@@ -41,8 +60,9 @@ end
 local function redraw()
     term.clear(colors.black)
 
-    for i = #cstack.config.snippets, 1, -1 do
-        local snippet = cstack.config.snippets[i]
+    local snippets = localMathElements()
+    for i = #snippets, 1, -1 do
+        local snippet = snippets[i]
         if not snippet.page or snippet.page == currentPage then
             local textColor = snippet.textcolor or colors.white
             if snippet.color == textColor then
@@ -81,17 +101,18 @@ while true do
             save()
         end
     elseif eventData[1] == "mouse_click" then
-        local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
+        local index, element = gui.getCollisionElement(eventData, localMathElements())
         if element and (not element.page or element.page == currentPage) then
             if eventData[2] == 1 then
-                if not element.command or element.mode == 0 then
+                if element.mode == -1 then
+                    --not action
+                elseif not element.command or element.mode == 0 then
                     menu.message("snippet error", "the snippet launch mode is not set")
                 elseif element.mode == 1 then
                     term.setCursorPos(1, 1)
                     menu.defaultColors()
                     term.clear()
                     shell.run(element.command)
-                    menu.defaultColors()
                     term.setCursorBlink(false)
                 elseif element.mode == 2 then
                     shell.openTab(element.command)
