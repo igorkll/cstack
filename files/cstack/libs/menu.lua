@@ -196,7 +196,9 @@ function menu.context(x, y, actions)
                             action.menu.redrawCallback = actions.redrawCallback
                         end
                     end
-                    menu.context(x + sizeX, eventData[4], action.menu)
+                    if menu.context(x + sizeX, eventData[4], action.menu) then
+                        return selected
+                    end
                 else
                     return selected
                 end

@@ -288,7 +288,8 @@ while true do
                             x = eventData[3],
                             y = eventData[4],
                             title = "untitled",
-                            page = currentPage
+                            page = currentPage,
+                            mode = 0
                         })
                         save()
                         return true
