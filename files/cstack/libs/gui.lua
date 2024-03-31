@@ -12,4 +12,21 @@ function gui.getCollisionElement(eventData, elements)
     end
 end
 
+function gui.moveToUp(elements, element)
+    local index
+    for i, v in ipairs(elements) do
+        if v == element then
+            index = i
+            break
+        end
+    end
+
+    if index then
+        table.remove(elements, index)
+        table.insert(elements, 1, element)
+        return true
+    end
+    return false
+end
+
 return gui

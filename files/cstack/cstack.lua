@@ -12,6 +12,9 @@ if not settings.get(settingsFlag, false) then
     settings.save()
 end
 
+fs.makeDir("/cstackData")
+shell.setDir("/cstackData")
+
 local libsPath = "/cstack/libs"
 for _, name in ipairs(fs.list(libsPath)) do
     name = name:sub(1, #name - 4)

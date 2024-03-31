@@ -16,7 +16,8 @@ end
 local function redraw()
     term.clear(colors.black)
 
-    for _, snippet in ipairs(cstack.config.snippets) do
+    for i = #cstack.config.snippets, 1, -1 do
+        local snippet = cstack.config.snippets[i]
         if snippet.page == currentPage then
             local textColor = snippet.textcolor
             if snippet.color == textColor then
@@ -155,6 +156,8 @@ while true do
                     }
                 })
             elseif eventData[2] == 3 then
+                gui.moveToUp(cstack.config.snippets, element)
+                save()
                 selectedSnipped = element
                 selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
             end
