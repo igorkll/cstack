@@ -2,16 +2,21 @@ multishell.setTitle(multishell.getCurrent(), "cstack")
 
 local currentPage = 0
 local selectedSnippedX, selectedSnippedY, selectedSnipped
-
 local builtinFunctions = {
     nextPage = function()
         currentPage = currentPage + 1
+        if currentPage > 16 then
+            currentPage = 16
+        end
     end,
     previousPage = function()
         currentPage = currentPage - 1
         if currentPage < 0 then
             currentPage = 0
         end
+    end,
+    homePage = function()
+        currentPage = 0
     end,
     getPage = function()
         return currentPage
@@ -235,6 +240,14 @@ while true do
                     active = currentPage > 0,
                     callback = function()
                         builtinFunctions.previousPage()
+                        return true
+                    end
+                },
+                {
+                    title = "home page",
+                    active = currentPage ~= 0,
+                    callback = function()
+                        builtinFunctions.homePage()
                         return true
                     end
                 }

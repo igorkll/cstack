@@ -34,6 +34,7 @@ local defaultConfig = {
 
 
         {
+            page = 0,
             x = 1,
             y = 1,
             sizeX = 16,
@@ -42,6 +43,7 @@ local defaultConfig = {
             color = colors.red
         },
         {
+            page = 0,
             x = 1,
             y = 2,
             sizeX = 16,
