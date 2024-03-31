@@ -26,15 +26,15 @@ local function wget(url)
     return data
 end
 
-local function download(path, dpath)
-    local url = baseUrl .. branch .. path
+local function download(path)
+    local url = baseUrl .. branch .. "/files" .. path
     local str, err = assert(wget(url))
     if not str then
         return nil, tostring(err or "unknown error")
     end
 
-    fs.makeDir("/" .. fs.getDir(dpath))
-    local file = fs.open(dpath, "wb")
+    fs.makeDir("/" .. fs.getDir(path))
+    local file = fs.open(path, "wb")
     file.write(str)
     file.close()
 
@@ -69,12 +69,12 @@ local function processList(data)
     return tbl
 end
 
-local function downloadList(listUrl, mode)
+local function downloadList(listUrl)
     print("start downloading from list: ", listUrl)
     local lst = processList(assert(wget(listUrl)))
     for i, path in ipairs(lst) do
         print("downloading: ", path)
-        assert(download(path, path, mode))
+        assert(download(path))
     end
 end
 
