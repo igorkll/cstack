@@ -350,13 +350,13 @@ parallel.waitForAny(function ()
         end
     end
 end, function ()
-    local osx, osy
+    local oldShellsCount
     while true do
-        local sx, sy = term.getSize()
-        if osx ~= sx or sy ~= osy then
+        local shellsCount = multishell.getCount()
+        if oldShellsCount ~= shellsCount then
             mathElements()
             redraw()
-            osx, osy = sx, sy
+            oldShellsCount = shellsCount
         end
         sleep(0.1)
     end
