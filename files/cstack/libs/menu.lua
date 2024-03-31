@@ -126,8 +126,10 @@ function menu.context(x, y, actions)
         end
     end
 
-    local function redraw()
-        gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
+    local function redraw(noRedrawShadow)
+        if not noRedrawShadow then
+            gfx.fill(x+1, y+1, sizeX, sizeY, colors.gray)
+        end
         for i, action in ipairs(actions) do
             local posy = (y + i) - 1
             if action == true then
@@ -176,7 +178,7 @@ function menu.context(x, y, actions)
                 os.queueEvent(unpack(eventData))
                 break
             end
-            redraw()
+            redraw(true)
         elseif eventData[1] == "mouse_up" then
             if selected then
                 local action = actions[selected]
@@ -187,6 +189,13 @@ function menu.context(x, y, actions)
                     selected = nil
                     redraw()
                 elseif action.menu then
+                    if actions.redrawCallback then
+                        actions.redrawCallback()
+                        redraw()
+                        if not action.menu.redrawCallback then
+                            action.menu.redrawCallback = actions.redrawCallback
+                        end
+                    end
                     menu.context(x + sizeX, eventData[4], action.menu)
                 else
                     return selected

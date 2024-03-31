@@ -77,6 +77,7 @@ while true do
                 end
 
                 menu.context(eventData[3], eventData[4], {
+                    redrawCallback = redraw,
                     {
                         title = "set title",
                         active = not element.readonly,
