@@ -3,7 +3,37 @@ local rx, ry = term.getSize()
 local defaultConfig = {
     snippets = {
         {
-            readonly = true,
+            x = 1,
+            y = ry,
+            sizeX = 2,
+            sizeY = 1,
+            title = "<<",
+            color = colors.purple,
+            func = "previousPage"
+        },
+        {
+            x = rx - 1,
+            y = ry,
+            sizeX = 2,
+            sizeY = 1,
+            title = ">>",
+            color = colors.purple,
+            func = "nextPage"
+        },
+        {
+            x = 3,
+            y = ry,
+            sizeX = rx - 4,
+            sizeY = 1,
+            title = "page: ",
+            smartTitle = "getPage",
+            color = colors.gray
+        },
+
+
+
+
+        {
             x = 1,
             y = 1,
             sizeX = 16,
@@ -12,7 +42,6 @@ local defaultConfig = {
             color = colors.red
         },
         {
-            readonly = true,
             x = 1,
             y = 2,
             sizeX = 16,

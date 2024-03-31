@@ -3,6 +3,21 @@ multishell.setTitle(multishell.getCurrent(), "cstack")
 local currentPage = 0
 local selectedSnippedX, selectedSnippedY, selectedSnipped
 
+local builtinFunctions = {
+    nextPage = function()
+        currentPage = currentPage + 1
+    end,
+    previousPage = function()
+        currentPage = currentPage - 1
+        if currentPage < 0 then
+            currentPage = 0
+        end
+    end,
+    getPage = function()
+        return currentPage
+    end
+}
+
 local function getPageInfo()
     if cstack.config.pageinfo[currentPage] then
         return cstack.config.pageinfo[currentPage]
@@ -12,11 +27,9 @@ end
 
 local function mathElements()
     for _, snippet in ipairs(cstack.config.snippets) do
-        snippet.page = snippet.page or currentPage
         snippet.sizeX = snippet.sizeX or (#(snippet.title or "") + 2)
         snippet.sizeY = snippet.sizeY or 2
         snippet.color = snippet.color or colors.orange
-        snippet.textcolor = snippet.textcolor or colors.white
     end
 end
 
@@ -25,12 +38,17 @@ local function redraw()
 
     for i = #cstack.config.snippets, 1, -1 do
         local snippet = cstack.config.snippets[i]
-        if snippet.page == currentPage then
-            local textColor = snippet.textcolor
+        if not snippet.page or snippet.page == currentPage then
+            local textColor = snippet.textcolor or colors.white
             if snippet.color == textColor then
                 textColor = colors.black
             end
-            gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, snippet.title:sub(1, snippet.sizeX - 2))
+
+            local title = tostring(snippet.title or "")
+            if snippet.smartTitle and builtinFunctions[snippet.smartTitle] then
+                title = title .. tostring(builtinFunctions[snippet.smartTitle]() or "")
+            end
+            gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, title:sub(1, snippet.sizeX - 2))
         end
     end
 end
@@ -59,7 +77,7 @@ while true do
         end
     elseif eventData[1] == "mouse_click" then
         local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
-        if element and element.page == currentPage then
+        if element and (not element.page or element.page == currentPage) then
             if eventData[2] == 1 then
                 if element.command then
                     term.setCursorPos(1, 1)
@@ -78,6 +96,10 @@ while true do
                         end
                     else
                         menu.message("syntax error", err)
+                    end
+                elseif element.func then
+                    if builtinFunctions[element.func] then
+                        builtinFunctions[element.func]()
                     end
                 end
             elseif eventData[2] == 2 then
@@ -193,7 +215,7 @@ while true do
             local locked = not not getPageInfo().locked
             menu.context(eventData[3], eventData[4], {
                 {
-                    title = "create command snipped",
+                    title = "create snipped",
                     active = not locked,
                     callback = function()
                         table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
@@ -202,10 +224,18 @@ while true do
                     end
                 },
                 {
-                    title = "create code snipped",
-                    active = not locked,
+                    title = "next page",
                     callback = function()
-                        
+                        builtinFunctions.nextPage()
+                        return true
+                    end
+                },
+                {
+                    title = "previous page",
+                    active = currentPage > 0,
+                    callback = function()
+                        builtinFunctions.previousPage()
+                        return true
                     end
                 }
             })
