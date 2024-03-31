@@ -34,15 +34,16 @@ local function localMathElements()
     local snippets = {}
     for _, snippet in ipairs(cstack.config.snippets) do
         local lSnippet = cstack.clone(snippet)
-        if lSnippet.sizeX > math.huge then
-            lSnippet.sizeX = menu.sizeX()
-        elseif lSnippet.sizeX < -math.huge then
-            lSnippet.sizeX = 0
+        lSnippet.real = snippet
+        if lSnippet.x == math.huge then
+            lSnippet.x = menu.sizeX()
+        elseif lSnippet.x == -math.huge then
+            lSnippet.x = 0
         end
-        if lSnippet.sizeY > math.huge then
-            lSnippet.sizeY = menu.sizeY()
-        elseif lSnippet.sizeY < -math.huge then
-            lSnippet.sizeY = 0
+        if lSnippet.y == math.huge then
+            lSnippet.y = menu.sizeY()
+        elseif lSnippet.y == -math.huge then
+            lSnippet.y = 0
         end
         table.insert(snippets, lSnippet)
     end
@@ -103,6 +104,7 @@ while true do
     elseif eventData[1] == "mouse_click" then
         local index, element = gui.getCollisionElement(eventData, localMathElements())
         if element and (not element.page or element.page == currentPage) then
+            element = element.real
             if eventData[2] == 1 then
                 if element.mode == -1 then
                     --not action
