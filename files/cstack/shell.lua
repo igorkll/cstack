@@ -3,6 +3,13 @@ multishell.setTitle(multishell.getCurrent(), "cstack")
 local currentPage = 0
 local selectedSnippedX, selectedSnippedY, selectedSnipped
 
+local function getPageInfo()
+    if cstack.config.pageinfo[currentPage] then
+        return cstack.config.pageinfo[currentPage]
+    end
+    return {}
+end
+
 local function mathElements()
     for _, snippet in ipairs(cstack.config.snippets) do
         snippet.page = snippet.page or currentPage
@@ -80,6 +87,15 @@ while true do
                 menu.context(eventData[3], eventData[4], {
                     redrawCallback = redraw,
                     {
+                        title = element.pinned and "unpin" or "pin",
+                        active = not element.readonly,
+                        callback = function()
+                            element.pinned = not element.pinned
+                            save()
+                            return true
+                        end
+                    },
+                    {
                         title = "set title",
                         active = not element.readonly,
                         callback = function()
@@ -156,16 +172,19 @@ while true do
                     }
                 })
             elseif eventData[2] == 3 then
-                gui.moveToUp(cstack.config.snippets, element)
-                save()
-                selectedSnipped = element
-                selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
+                if not element.pinned then
+                    gui.moveToUp(cstack.config.snippets, element)
+                    save()
+                    selectedSnipped = element
+                    selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
+                end
             end
         elseif eventData[2] == 2 then
+            local locked = not not getPageInfo().locked
             menu.context(eventData[3], eventData[4], {
                 {
                     title = "create command snipped",
-                    
+                    active = not locked,
                     callback = function()
                         table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
                         save()
@@ -174,7 +193,7 @@ while true do
                 },
                 {
                     title = "create code snipped",
-                    
+                    active = not locked,
                     callback = function()
                         
                     end
