@@ -41,7 +41,7 @@ while true do
     if eventData[1] == "terminate" then
         os.shutdown()
     elseif eventData[1] == "mouse_drag" then
-        if selectedSnipped then
+        if selectedSnipped and eventData[2] == 3 then
             local x, y = eventData[3], eventData[4]
             local dx, dy = x - selectedSnippedX, y - selectedSnippedY
             selectedSnipped.x = selectedSnipped.x + dx
@@ -52,9 +52,6 @@ while true do
     elseif eventData[1] == "mouse_click" then
         local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
         if element and element.page == currentPage then
-            selectedSnipped = element
-            selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
-
             if eventData[2] == 1 then
                 if element.command then
                     term.setCursorPos(1, 1)
@@ -65,7 +62,7 @@ while true do
                 elseif element.file then
                     shell.openTab(element.file)
                 end
-            else
+            elseif eventData[2] == 2 then
                 local function setSnippedColor(obj)
                     element.color = colors[obj.title]
                     save()
@@ -156,6 +153,9 @@ while true do
                         end
                     }
                 })
+            elseif eventData[2] == 3 then
+                selectedSnipped = element
+                selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]
             end
         elseif eventData[2] == 2 then
             menu.context(eventData[3], eventData[4], {
