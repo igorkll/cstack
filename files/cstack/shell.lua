@@ -53,7 +53,7 @@ local function redraw()
             if snippet.smartTitle and builtinFunctions[snippet.smartTitle] then
                 title = title .. tostring(builtinFunctions[snippet.smartTitle]() or "")
             end
-            gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, title:sub(1, snippet.sizeX - 2))
+            gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, title:sub(1, snippet.sizeX))
         end
     end
 end
@@ -84,16 +84,19 @@ while true do
         local index, element = gui.getCollisionElement(eventData, cstack.config.snippets)
         if element and (not element.page or element.page == currentPage) then
             if eventData[2] == 1 then
-                if element.command then
+                if not element.command or element.mode == 0 then
+                    menu.message("snippet error", "the snippet launch mode is not set")
+                elseif element.mode == 1 then
                     term.setCursorPos(1, 1)
                     menu.defaultColors()
                     term.clear()
                     shell.run(element.command)
+                    menu.defaultColors()
                     term.setCursorBlink(false)
-                elseif element.program then
-                    shell.openTab(element.program)
-                elseif element.code then
-                    local code, err = load(element.code)
+                elseif element.mode == 2 then
+                    shell.openTab(element.command)
+                elseif element.mode == 3 then
+                    local code, err = load(element.command)
                     if code then
                         local ok, err = pcall(code)
                         if not ok then
@@ -102,9 +105,9 @@ while true do
                     else
                         menu.message("syntax error", err)
                     end
-                elseif element.func then
-                    if builtinFunctions[element.func] then
-                        builtinFunctions[element.func]()
+                elseif element.mode == 4 then
+                    if builtinFunctions[element.command] then
+                        builtinFunctions[element.command]()
                     end
                 end
             elseif eventData[2] == 2 then
@@ -134,7 +137,7 @@ while true do
                     },
                     {
                         title = "set title",
-                        active = not element.readonly,
+                        active = not element.readonly and not element.pinned,
                         callback = function()
                             redraw()
                             element.title = menu.input("title", element.title) or element.title
@@ -143,11 +146,69 @@ while true do
                         end
                     },
                     {
-                        title = "change size",
-                        active = not element.readonly,
+                        title = "set command",
+                        active = not element.readonly and not element.pinned,
+                        callback = function()
+                            redraw()
+                            element.command = menu.input("command", element.command) or element.command
+                            save()
+                            return true
+                        end
+                    },
+                    {
+                        title = "set mode",
+                        active = not element.readonly and not element.pinned,
+                        menu = {
+                            {
+                                title = "none",
+                                active = not element.readonly and not element.pinned,
+                                callback = function()
+                                    element.mode = 0
+                                    save()
+                                    return true
+                                end
+                            },
+                            {
+                                title = "command",
+                                active = not element.readonly and not element.pinned,
+                                callback = function()
+                                    element.mode = 1
+                                    save()
+                                    return true
+                                end
+                            },
+                            {
+                                title = "tab",
+                                active = not element.readonly and not element.pinned,
+                                callback = function()
+                                    element.mode = 2
+                                    save()
+                                    return true
+                                end
+                            },
+                            {
+                                title = "code",
+                                active = not element.readonly and not element.pinned,
+                                callback = function()
+                                    element.mode = 3
+                                    save()
+                                    return true
+                                end
+                            }
+                        }
+                    },
+                    {
+                        title = "set size",
+                        active = not element.readonly and not element.pinned,
                         menu = {
                             {
                                 title = "automatic",
+                                callback = setSnippedSize
+                            },
+                            {
+                                sizeX = 4,
+                                sizeY = 4,
+                                title = "4x4",
                                 callback = setSnippedSize
                             },
                             {
@@ -171,14 +232,14 @@ while true do
                             {
                                 sizeX = 16,
                                 sizeY = 8,
-                                title = "16x8",
+                                title = "8x7",
                                 callback = setSnippedSize
                             }
                         }
                     },
                     {
-                        title = "change color",
-                        active = not element.readonly,
+                        title = "set color",
+                        active = not element.readonly and not element.pinned,
                         menu = {
                             {
                                 title = "red",
@@ -200,7 +261,7 @@ while true do
                     },
                     {
                         title = "delete",
-                        active = not element.readonly,
+                        active = not element.readonly and not element.pinned,
                         callback = function()
                             table.remove(cstack.config.snippets, index)
                             save()
@@ -223,7 +284,12 @@ while true do
                     title = "create snipped",
                     active = not locked,
                     callback = function()
-                        table.insert(cstack.config.snippets, {x = eventData[3], y = eventData[4], title = "untitled"})
+                        table.insert(cstack.config.snippets, {
+                            x = eventData[3],
+                            y = eventData[4],
+                            title = "untitled",
+                            page = currentPage
+                        })
                         save()
                         return true
                     end

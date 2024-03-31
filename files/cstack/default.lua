@@ -9,7 +9,18 @@ local defaultConfig = {
             sizeY = 1,
             title = "<<",
             color = colors.purple,
-            func = "previousPage"
+            command = "previousPage",
+            mode = 4
+        },
+        {
+            x = 3,
+            y = ry,
+            sizeX = 2,
+            sizeY = 1,
+            title = "HM",
+            color = colors.pink,
+            command = "homePage",
+            mode = 4
         },
         {
             x = rx - 1,
@@ -18,12 +29,13 @@ local defaultConfig = {
             sizeY = 1,
             title = ">>",
             color = colors.purple,
-            func = "nextPage"
+            command = "nextPage",
+            mode = 4
         },
         {
-            x = 3,
+            x = 5,
             y = ry,
-            sizeX = rx - 4,
+            sizeX = rx - 6,
             sizeY = 1,
             title = "page: ",
             smartTitle = "getPage",
@@ -32,15 +44,15 @@ local defaultConfig = {
 
 
 
-
         {
             page = 0,
             x = 1,
-            y = 1,
+            y = 2,
             sizeX = 16,
             sizeY = 1,
-            title = "cstackOS",
-            color = colors.red
+            title = "shell",
+            color = colors.orange,
+            command = "shell"
         },
         {
             page = 0,
@@ -51,7 +63,7 @@ local defaultConfig = {
             title = "shell",
             color = colors.orange,
             command = "shell"
-        }
+        },
     },
     pageinfo = {
         [0] = {
