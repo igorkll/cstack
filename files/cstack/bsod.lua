@@ -31,7 +31,7 @@ end
 redraw()
 
 -- menu
-local menuPoints = {"shutdown", "reboot", "wipe computer", "open shell"}
+local menuPoints = {"shutdown", "reboot", "wipe computer", "wipe data", "open shell"}
 local wipeValue = 0
 local funcs = {
     function ()
@@ -57,6 +57,22 @@ local funcs = {
                 end
             end
             centerPrint(sizeY - 2, "computer is wiped")
+            sleep(1)
+            os.shutdown()
+        end
+    end,
+    function ()
+        wipeValue = (wipeValue or -1) + 1
+        term.setCursorPos(1, sizeY - 2)
+        term.clearLine()
+        if wipeValue == 0 then
+            centerPrint(sizeY - 2, "hold enter to wipe")
+        else
+            centerPrint(sizeY - 2, "%" .. math.floor(wipeValue))
+        end
+        if wipeValue >= 100 then
+            fs.delete("/cstackData")
+            centerPrint(sizeY - 2, "data is wiped")
             sleep(1)
             os.shutdown()
         end

@@ -215,8 +215,37 @@ function menu.drawZoneBox(sizeX, sizeY, color)
     return x, y, sizeX, sizeY
 end
 
+function menu.message(title, ...)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 8)
+    local closeButtonX = (x + sizeX) - 3
+    gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
+    term.setBackgroundColor(colors.gray)
+    term.setTextColor(colors.white)
+    menu.centerPrint(y, title or "input")
+    local msgWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, sizeY - 3)
+    local blick = term.getCursorBlink()
+    term.redirect(msgWindow)
+    term.clear(colors.black)
+    print(...)
+
+    while true do
+        local eventData = {os.pullEventRaw()}
+        if eventData[1] == "mouse_click" then
+            if eventData[4] == y and eventData[3] >= closeButtonX and eventData[3] < (x + sizeX) then
+                break
+            end
+        elseif eventData[1] == "terminate" then
+            break
+        end
+    end
+
+    term.redirect(term.native())
+    term.setCursorBlink(blick)
+    menu.defaultColors()
+end
+
 function menu.input(title, default, hiddenChar)
-    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() / 1.7), 4)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 4)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)

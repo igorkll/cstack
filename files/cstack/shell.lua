@@ -67,8 +67,18 @@ while true do
                     term.clear()
                     shell.run(element.command)
                     term.setCursorBlink(false)
-                elseif element.file then
-                    shell.openTab(element.file)
+                elseif element.program then
+                    shell.openTab(element.program)
+                elseif element.code then
+                    local code, err = load(element.code)
+                    if code then
+                        local ok, err = pcall(code)
+                        if not ok then
+                            menu.message("runtime error", err)
+                        end
+                    else
+                        menu.message("syntax error", err)
+                    end
                 end
             elseif eventData[2] == 2 then
                 local function setSnippedColor(obj)
