@@ -2,6 +2,7 @@
 /cstack/bsod.lua
 /cstack/cstack.lua
 /cstack/shell.lua
+/cstack/snippets.lua
 /cstack/startup.lua
 /cstack/libs/cstack.lua
 /cstack/libs/gfx.lua
