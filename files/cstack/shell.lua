@@ -120,7 +120,7 @@ parallel.waitForAny(function ()
                     elseif element.mode == 2 then
                         shell.openTab(element.command)
                     elseif element.mode == 3 then
-                        local code, err = load(element.command)
+                        local code, err = load(element.command, "snipped", "t", _ENV)
                         if code then
                             local ok, err = pcall(code)
                             if not ok then
