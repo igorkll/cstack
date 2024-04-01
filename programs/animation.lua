@@ -23,6 +23,9 @@ local function createBall()
 end
 
 local balls = {}
+for i = 1, 32 do
+    table.insert(balls, createBall())
+end
 
 while true do
     term.setBackgroundColor(colors.black)
