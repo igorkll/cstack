@@ -10,21 +10,25 @@ local function createBall()
 
     function ball.draw()
         term.setBackgroundColor(ball.color)
-        term.setCursorPos(math.floor(ball.x) - 1, math.floor(ball.y) - 1)
-        term.write("  ")
+        term.setCursorPos(math.floor(ball.x), math.floor(ball.y))
+        term.write(" ")
     end
 
     function ball.tick()
         ball.x = ball.x + ball.dx
         ball.y = ball.y + ball.dy
-        if ball.x < 0 then
+        if ball.x < 1 then
+            ball.x = 1
             ball.dx = math.abs(ball.dx)
         elseif ball.x > sx then
+            ball.x = sx
             ball.dx = -math.abs(ball.dx)
         end
-        if ball.y < 0 then
+        if ball.y < 1 then
+            ball.y = 1
             ball.dy = math.abs(ball.dy)
-        elseif ball.y > sx then
+        elseif ball.y > sy then
+            ball.y = sy
             ball.dy = -math.abs(ball.dy)
         end
     end
@@ -33,7 +37,7 @@ local function createBall()
 end
 
 local balls = {}
-for i = 1, 512 do
+for i = 1, 32 do
     table.insert(balls, createBall())
 end
 
