@@ -1,5 +1,22 @@
 local inventorySize = 16
 
+local function move(dir)
+    if dir == -1 then
+        return turtle.down()
+    elseif dir == 0 then
+        return turtle.forward()
+    elseif dir == 1 then
+        return turtle.up()
+    end
+    return false
+end
+
+local function smartMove(dir)
+    while true do
+        move(dir)
+    end
+end
+
 local function refuel()
     print("REFUEL")
     print("fuel level: ", turtle.getFuelLevel())
