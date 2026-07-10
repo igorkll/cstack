@@ -58,7 +58,7 @@ local function tryJustMove()
     downMax()
     for i = 1, 3 do
         if justMove(moveLimit, getRandomAction(true)) then
-            true
+            break
         end
     end
     downMax()
