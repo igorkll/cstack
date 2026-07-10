@@ -24,7 +24,9 @@ end
 local function justMove(moveLimit, action)
     while true do
         if turtle.forward() then
-            return true
+            if math.random() < 0.1 then
+                return true
+            end
         else
             action()
         end
@@ -54,10 +56,12 @@ local function tryJustMove()
     actions = [getRandomAction, turtle.turnLeft, turtle.turnRight, turtle.up, turtle.down, turtle.back, downMax]
 
     downMax()
-
     for i = 1, 3 do
-        justMove(moveLimit, getRandomAction(true))
+        if justMove(moveLimit, getRandomAction(true)) then
+            true
+        end
     end
+    downMax()
 end
 
 while true do
