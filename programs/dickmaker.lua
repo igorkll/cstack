@@ -1,6 +1,9 @@
 local inventorySize = 16
 
 local function refuel()
+    print("REFUEL")
+    print("fuel level: ", turtle.getFuelLevel())
+    print("fuel limit: ", turtle.getFuelLimit())
     for i = 1, inventorySize do
         turtle.select(i)
         turtle.refuel()
