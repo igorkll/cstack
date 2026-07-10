@@ -53,7 +53,7 @@ local function tryJustMove()
         return actions[math.random(fromOne and 1 or 2, #actions)]
     end
 
-    actions = {getRandomAction, turtle.turnLeft, turtle.turnRight, turtle.up, turtle.down, turtle.back, downMax}
+    actions = {getRandomAction, turtle.turnLeft, turtle.turnRight, turtle.up, turtle.down}
 
     downMax()
     for i = 1, 3 do
