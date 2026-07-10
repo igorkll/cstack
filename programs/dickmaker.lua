@@ -64,10 +64,55 @@ local function tryJustMove()
     downMax()
 end
 
+local lastBlockSlot
+
+local function placeBlock(direction)
+    local function tryPlace(slotIndex)
+        turtle.select(slotIndex)
+
+        if direction == 0 then
+            return turtle.place()
+        elseif direction == 1 then
+            return turtle.placeUp()
+        elseif direction == -1 then
+            return turtle.placeDown()
+        end
+    end
+
+    if lastBlockSlot then
+        if tryPlace(lastBlockSlot) then
+            return true
+        end
+    end
+    
+    for i = 1, inventorySize do
+        if tryPlace(i) then
+            lastBlockSlot = i
+            return true
+        end
+    end
+
+    return false
+end
+
+local function placeDick()
+    if not placeBlock(0) then return false end
+    turtle.turnLeft()
+    turtle.turnLeft()
+    if not placeBlock(0) then return false end
+    if not turtle.up() then return false end
+    if not turtle.up() then return false end
+    if not placeBlock(-1) then return false end
+    if not turtle.up() then return false end
+    if not placeBlock(-1) then return false end
+    return true
+end
+
 while true do
     autoRefuel()
 
     tryJustMove()
+    placeDick()
 
     os.sleep(0.1)
 end
