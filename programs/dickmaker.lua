@@ -23,7 +23,7 @@ end
 
 local function justMove(moveLimit, action)
     while true do
-        if turtle.forward() then
+        if math.random() < 0.9 and turtle.forward() then
             if math.random() < 0.1 then
                 return true
             end
@@ -46,7 +46,7 @@ local function downMax()
 end
 
 local function tryJustMove()
-    local moveLimit = 20
+    local moveLimit = 5
     local actions
 
     local function getRandomAction(fromOne)
