@@ -12,8 +12,27 @@ local function move(dir)
 end
 
 local function smartMove(dir)
+    local currentPos = {0, 0, 0}
+    local targetPos = {0, 0, 0}
+    local currentTurn = 0
+
+    local function turn(left)
+        if left then
+            turtle.turnLeft()
+            currentTurn = currentTurn + 1
+        else
+            turtle.turnRight()
+            currentTurn = currentTurn - 1
+        end
+        currentTurn = currentTurn % 4
+    end
+
     while true do
-        move(dir)
+        if move(dir) then
+            break
+        end
+
+        turtle.turnLeft()
     end
 end
 
