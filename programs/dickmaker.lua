@@ -10,7 +10,7 @@ end
 local function autoRefuel()
     local fuelLevel = turtle.getFuelLevel()
     local fuelLimit = turtle.getFuelLimit()
-    if fuelLimit ~= "unlimited" and fuelLevel < fuelLimit / 2 then
+    if fuelLimit ~= "unlimited" and fuelLevel < 1000 then
         refuel()
     end
 end
