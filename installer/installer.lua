@@ -81,7 +81,7 @@ end
 ---------------------------------------
 
 term.setBackgroundColor(colors.blue)
-print("do you really want to install cstack?")
+print("do you really want to install cstack shell?")
 print("type 'YES' to start installation")
 
 if io.read() == "YES" then

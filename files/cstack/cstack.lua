@@ -10,6 +10,7 @@ if not settings.get(settingsFlag, false) then
     settings.set("bios.use_multishell", true)
     settings.set(settingsFlag, true)
     settings.save()
+    os.reboot()
 end
 
 fs.makeDir("/cstackData")
