@@ -106,9 +106,7 @@ while true do
     end
     
     local eventData = {os.pullEventRaw()}
-    if eventData[1] == "terminate" then
-        os.shutdown()
-    elseif eventData[1] == "key" then
+    if eventData[1] == "key" then
         if eventData[2] == keys.enter then
             funcs[currentPoint]()
         elseif eventData[2] == keys.left then
