@@ -23,7 +23,7 @@ for _, name in ipairs(fs.list(libsPath)) do
     _G[name] = require(libsPath .. "/" .. name)
 end
 
-shell.setPath(shell.getPath() .. ":/cstack/programs")
+shell.setPath(shell.path() .. ":/cstack/programs")
 
 shell.run("/cstack/shell.lua")
 term.setBackgroundColor(colors.black)
