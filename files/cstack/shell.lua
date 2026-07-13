@@ -31,20 +31,41 @@ local function getPageInfo()
 end
 
 local function localMathElements()
+    local rx, ry = menu.sizeX(), menu.sizeY()
+
     local snippets = {}
     for _, snippet in ipairs(cstack.config.snippets) do
         local lSnippet = cstack.clone(snippet)
         lSnippet.real = snippet
-        if lSnippet.x == math.huge then
-            lSnippet.x = menu.sizeX()
-        elseif lSnippet.x == -math.huge then
-            lSnippet.x = 0
+
+        local anchorX, anchorY = 0, 0
+        if lSnippet.anchor then
+            local sizeX, sizeY = lSnippet.sizeX, lSnippet.sizeY
+
+            if lSnippet.anchor[1] == -1 then
+                anchorX = 1
+            elseif lSnippet.anchor[1] == 1 then
+                anchorX = rx - (sizeX - 1)
+            end
+
+            if lSnippet.anchor[2] == -1 then
+                anchorY = 1
+            elseif lSnippet.anchor[2] == 1 then
+                anchorY = ry - (sizeY - 1)
+            end
         end
-        if lSnippet.y == math.huge then
-            lSnippet.y = menu.sizeY()
-        elseif lSnippet.y == -math.huge then
-            lSnippet.y = 0
+        
+        lSnippet.x = anchorX + lSnippet.x
+        lSnippet.y = anchorY + lSnippet.y
+        
+        if lSnippet.sizeX == math.huge then
+            lSnippet.sizeX = rx - (lSnippet.x - 1)
         end
+        
+        if lSnippet.sizeY == math.huge then
+            lSnippet.sizeY = ry - (lSnippet.y - 1)
+        end
+
         table.insert(snippets, lSnippet)
     end
     return snippets
@@ -87,7 +108,6 @@ end
 
 mathElements()
 redraw()
-
 
 local oldShellsCount
 while true do

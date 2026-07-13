@@ -1,10 +1,20 @@
-local rx, ry = term.getSize()
-
 local defaultConfig = {
     snippets = {
         {
+            anchor = {nil, 1},
             x = 1,
-            y = math.huge,
+            y = 0,
+            sizeX = math.huge,
+            sizeY = 1,
+            title = "page: ",
+            smartTitle = "getPage",
+            color = colors.gray,
+            mode = -1
+        },
+        {
+            anchor = {nil, 1},
+            x = 1,
+            y = 0,
             sizeX = 2,
             sizeY = 1,
             title = "<<",
@@ -13,8 +23,9 @@ local defaultConfig = {
             mode = 4
         },
         {
+            anchor = {nil, 1},
             x = 3,
-            y = math.huge,
+            y = 0,
             sizeX = 2,
             sizeY = 1,
             title = "HM",
@@ -23,24 +34,15 @@ local defaultConfig = {
             mode = 4
         },
         {
-            x = rx - 1,
-            y = math.huge,
+            anchor = {1, 1},
+            x = 0,
+            y = 0,
             sizeX = 2,
             sizeY = 1,
             title = ">>",
             color = colors.purple,
             command = "nextPage",
             mode = 4
-        },
-        {
-            x = 5,
-            y = math.huge,
-            sizeX = rx - 6,
-            sizeY = 1,
-            title = "page: ",
-            smartTitle = "getPage",
-            color = colors.gray,
-            mode = -1
         },
 
 
