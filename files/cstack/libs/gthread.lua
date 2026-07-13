@@ -27,10 +27,13 @@ local function resumeThreads(eventTbl)
     for i = #gthread.threads, 1, -1 do
         local th = gthread.threads[i]
 
-        if coroutine.status(th.co) == "dead" then
-            th.dead = true
-        elseif not th.dead then
-            rawResume(th, "resume_thread", unpack(th.args))
+        if not th.dead then
+            rawResume(th, "resume_thread", eventTbl)
+
+            if coroutine.status(th.co) == "dead" then
+                th.dead = true
+                th.deadReason = th.lastCoReturn
+            end
         end
     end
 end
