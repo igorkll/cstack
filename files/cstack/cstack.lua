@@ -9,6 +9,7 @@ if not settings.get(settingsFlag, false) then
     settings.set("shell.allow_startup", true)
     settings.set("bios.use_multishell", true)
     settings.set("list.show_hidden", true)
+    settings.set("shell.autocomplete_hidden", true)
     settings.set(settingsFlag, true)
     settings.save()
     os.reboot()

@@ -1,8 +1,8 @@
 local defaultConfig = {
     snippets = {
         {
-            anchor = {nil, 1},
-            x = 1,
+            anchor = {-1, 1},
+            x = 0,
             y = 0,
             sizeX = 2,
             sizeY = 1,
@@ -12,8 +12,8 @@ local defaultConfig = {
             mode = 4
         },
         {
-            anchor = {nil, 1},
-            x = 3,
+            anchor = {-1, 1},
+            x = 2,
             y = 0,
             sizeX = 2,
             sizeY = 1,
@@ -60,9 +60,6 @@ local defaultConfig = {
         }
     },
     pageinfo = {
-        [0] = {
-            locked = true
-        }
     }
 }
 
