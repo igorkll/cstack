@@ -4,17 +4,6 @@ local defaultConfig = {
             anchor = {nil, 1},
             x = 1,
             y = 0,
-            sizeX = math.huge,
-            sizeY = 1,
-            title = "page: ",
-            smartTitle = "getPage",
-            color = colors.gray,
-            mode = -1
-        },
-        {
-            anchor = {nil, 1},
-            x = 1,
-            y = 0,
             sizeX = 2,
             sizeY = 1,
             title = "<<",
@@ -43,6 +32,17 @@ local defaultConfig = {
             color = colors.purple,
             command = "nextPage",
             mode = 4
+        },
+        {
+            anchor = {nil, 1},
+            x = 1,
+            y = 0,
+            sizeX = math.huge,
+            sizeY = 1,
+            title = "page: ",
+            smartTitle = "getPage",
+            color = colors.gray,
+            mode = -1
         },
 
 
