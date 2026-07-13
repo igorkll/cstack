@@ -5,8 +5,9 @@ gthread.mainthread = coroutine.running()
 local function rawResume(th, ...)
     local _t = term.current()
     term.redirect(th.term or term.native())
-    th.lastCoReturn = {coroutine.resume(th.co, ...)}
+    local coReturn = {coroutine.resume(th.co, ...)}
     term.redirect(_t)
+    return coReturn
 end
 
 local idCounter = 0
@@ -49,14 +50,12 @@ local function resumeThreads(eventTbl)
 
         if th.dead then
             table.remove(gthread.threads, i)
-        end
-
-        if not th.dead then
-            rawResume(th, "resume_thread", eventTbl)
+        else
+            local coReturn = rawResume(th, "resume_thread", eventTbl)
 
             if coroutine.status(th.co) == "dead" then
                 th.dead = true
-                th.deadReason = th.lastCoReturn
+                th.deadReason = coReturn
             end
         end
     end
