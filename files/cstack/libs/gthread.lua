@@ -9,13 +9,18 @@ local function rawResume(th, ...)
     term.redirect(_t)
 end
 
+local idCounter = 0
+
 function gthread.create(func, term, ...)
     local co = coroutine.create(func)
     local th = {
+        id = idCounter,
         co = co,
         term = term,
         args = {...}
     }
+
+    idCounter = idCounter + 1
 
     table.insert(gthread.threads, th)
     rawResume(th, unpack(th.args))
@@ -23,9 +28,23 @@ function gthread.create(func, term, ...)
     return th
 end
 
+function gthread.kill(id)
+    for i = #gthread.threads, 1, -1 do
+        local th = gthread.threads[i]
+
+        if th.id == id then
+            table.remove(gthread.threads, i)
+        end
+    end
+end
+
 local function resumeThreads(eventTbl)
     for i = #gthread.threads, 1, -1 do
         local th = gthread.threads[i]
+
+        if th.dead then
+            table.remove(gthread.threads, i)
+        end
 
         if not th.dead then
             rawResume(th, "resume_thread", eventTbl)
