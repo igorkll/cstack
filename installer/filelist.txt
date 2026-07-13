@@ -10,3 +10,4 @@
 /cstack/libs/cstack.lua
 /cstack/libs/gui.lua
 /cstack/libs/gfx.lua
+/cstack/libs/gthread.lua
