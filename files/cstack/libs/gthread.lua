@@ -23,7 +23,7 @@ local function resumeThreads(eventTbl)
             th.dead = true
             table.remove(i)
         else
-            coroutine.resume(eventTbl)
+            coroutine.resume("resume_thread", eventTbl)
         end
     end
 end
@@ -31,20 +31,15 @@ end
 local pullEventRaw = os.pullEventRaw
 os.pullEventRaw = function(sFilter)
     while true do
-        local eventTbl
-        if coroutine.running() == gthread.mainthread then
-            eventTbl = {pcall(pullEventRaw)}
-            resumeThreads(eventTbl)
+        local eventTbl = {pcall(coroutine.yield)}
+        if eventTbl[1] == "resume_thread" then
+            eventTbl = eventTbl[2] --значит прилетел как продолжение потока, не разпостроняем
         else
-            eventTbl = coroutine.yield()
+            resumeThreads(eventTbl) --значит эвент прилетел с computercraft, разпостроняем его по потокам
         end
 
-        if eventTbl[1] then
-            if not sFilter or eventTbl[2] == sFilter then
-                return unpack(eventTbl, 2)
-            end
-        else
-            error(eventTbl[2], 2) -- для правильного положение ошибки относительно родительской функции, level ставлю на 2
+        if not sFilter or eventTbl[1] == sFilter then
+            return unpack(eventTbl)
         end
     end
 end
