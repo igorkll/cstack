@@ -2,15 +2,23 @@ local gthread = {}
 gthread.threads = {}
 gthread.mainthread = coroutine.running()
 
-function gthread.create(func, ...)
+local function rawResume(th, ...)
+    local _t = term.current()
+    term.redirect(th.term or term.native())
+    coroutine.resume(th.co, ...)
+    term.redirect(_t)
+end
+
+function gthread.create(func, term, ...)
     local co = coroutine.create(func)
     local th = {
         co = co,
+        term = term,
         args = {...}
     }
 
     table.insert(gthread.threads, th)
-    coroutine.resume(co, unpack(th.args))
+    rawResume(th, unpack(th.args))
 
     return th
 end
@@ -23,7 +31,7 @@ local function resumeThreads(eventTbl)
             th.dead = true
             table.remove(i)
         else
-            coroutine.resume("resume_thread", eventTbl)
+            rawResume(th, "resume_thread", unpack(th.args))
         end
     end
 end
@@ -31,7 +39,7 @@ end
 local pullEventRaw = os.pullEventRaw
 os.pullEventRaw = function(sFilter)
     while true do
-        local eventTbl = {pcall(coroutine.yield)}
+        local eventTbl = {coroutine.yield()}
         if eventTbl[1] == "resume_thread" then
             eventTbl = eventTbl[2] --значит прилетел как продолжение потока, не разпостроняем
         else
