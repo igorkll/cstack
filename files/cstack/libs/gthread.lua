@@ -11,14 +11,19 @@ end
 
 local idCounter = 0
 
-function gthread.create(func, term, ...)
+function gthread.create(func, ext, ...)
     local co = coroutine.create(func)
     local th = {
         id = idCounter,
         co = co,
-        term = term,
         args = {...}
     }
+
+    if ext then
+        for k, v in pairs(ext) do
+            th[k] = v
+        end
+    end
 
     idCounter = idCounter + 1
 
