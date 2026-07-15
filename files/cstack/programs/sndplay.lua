@@ -1,0 +1,45 @@
+local speaker = peripheral.find("speaker")
+if not speaker then
+    return
+end
+
+local args = { ... }
+local url = args[1]
+
+local function playAudioStream(url)
+    local response = http.get(url, nil, true)
+    if not response then
+        print("Failed to load: " .. url)
+        return
+    end
+
+    if response.getResponseCode() ~= 200 then
+        print("Error: " .. response.getResponseCode())
+        response.close()
+        return
+    end
+
+    print("Start playing...")
+
+    local chunkSize = 16 * 1024
+
+    while true do
+        local chunk = response.read(chunkSize)
+        if not chunk then
+            break
+        end
+
+        local buffer = {}
+        for i = 1, #chunk do
+            buffer[i] = string.byte(chunk, i) - 128
+        end
+
+        while not speaker.playAudio(buffer) do
+            os.pullEvent("speaker_audio_empty")
+        end
+    end
+
+    response.close()
+end
+
+playAudioStream(url)
