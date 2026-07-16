@@ -134,8 +134,10 @@ while true do
             save()
         end
     elseif eventData[1] == "mouse_click" then
-        local index, element = gui.getCollisionElement(eventData, localMathElements())
-        if element and (not element.page or element.page == currentPage) then
+        local index, element = gui.getCollisionElement(eventData, localMathElements(), function(element)
+            return not element.page or element.page == currentPage
+        end)
+        if element then
             element = element.real
             if eventData[2] == 1 then
                 if element.mode == -1 then
