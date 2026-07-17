@@ -1,32 +1,20 @@
-local speaker = peripheral.find("speaker")
-if not speaker then
-    return
-end
+local sndplay = {}
 
-local args = { ... }
-local urlOrPath = args[1]
-
-local _print = print
-local function print(...)
-    _print(...)
-end
-
-local function playAudioStreamFromUrl(url)
+function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
     local response = http.get(url, nil, true)
     if not response then
-        print("Failed to load: " .. url)
-        return
+        return -1
     end
 
     if response.getResponseCode() ~= 200 then
-        print("Error: " .. response.getResponseCode())
+        local errCode = response.getResponseCode()
         response.close()
-        return
+        return errCode
     end
 
-    print("Start playing...")
-
-    local chunkSize = 16 * 1024
+    if not chunkSize then
+        chunkSize = 16 * 1024
+    end
 
     while true do
         local chunk = response.read(chunkSize)
@@ -42,9 +30,13 @@ local function playAudioStreamFromUrl(url)
         while not speaker.playAudio(buffer) do
             os.pullEvent("speaker_audio_empty")
         end
+
+        if yield then
+            yield()
+        end
     end
 
     response.close()
 end
 
-playAudioStreamFromUrl(urlOrPath)
+return sndplay
