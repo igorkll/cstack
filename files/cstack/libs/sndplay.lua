@@ -3,7 +3,7 @@ local sndplay = {}
 function sndplay.loadStreamFromUrl(url, chunkSize)
     local response = http.get(url, nil, true)
     if not response then
-        return -1
+        return "failed to load stream"
     end
 
     if response.getResponseCode() ~= 200 then
@@ -50,6 +50,10 @@ function sndplay.loadStreamFromUrl(url, chunkSize)
     }
 
     return stream
+end
+
+function sndplay.loadStreamFromDisk(url, chunkSize)
+
 end
 
 function sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
