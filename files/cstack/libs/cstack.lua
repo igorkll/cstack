@@ -83,7 +83,7 @@ function cstack.getCurrentVersion()
 end
 
 function cstack.getActualVersion()
-    local url = "https://raw.githubusercontent.com/igorkll/cstack/" ..cstack.getCurrentBranch()  .. "files/cstack/version.txt"
+    local url = "https://raw.githubusercontent.com/igorkll/cstack/" ..cstack.getCurrentBranch()  .. "/files/cstack/version.txt"
     local result, err = cstack.fetchUrl(url)
     if not result then return nil, err end
     return tonumber(result)
