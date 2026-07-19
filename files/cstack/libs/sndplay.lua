@@ -20,6 +20,8 @@ function sndplay.loadStreamFromUrl(url, chunkSize)
     local stream
     stream = {
         getBuffer = function()
+            if ended then return end
+
             local chunk = response.read(chunkSize)
             if not chunk then
                 stream.close()
@@ -62,7 +64,16 @@ end
 
 function sndplay.playStream(speaker, stream, loop)
     while true do
-        sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+        local buffer = stream.getBuffer()
+        if buffer then
+            sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+        else
+            if loop then
+                stream = stream.reopen()
+            else
+                return
+            end
+        end
     end
 end
 
