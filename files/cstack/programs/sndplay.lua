@@ -8,8 +8,10 @@ local urlOrPath = args[1]
 
 local streamOrError
 if urlOrPath then --типо проверка на начало http: https: которой пока нет
+    print("Loading stream from url...")
     streamOrError = sndplay.loadStreamFromUrl(urlOrPath)
 else
+    print("Loading stream from disk...")
     streamOrError = sndplay.loadStreamFromDisk(urlOrPath)
 end
 
