@@ -302,12 +302,12 @@ function menu.yesno(title, ...)
 
     local buttonsY = y + sizeY - 2
     local noButtonX = x + 1
-    local yesButtonX = x + sizeX - 5
+    local yesButtonX = x + sizeX - 5 - 1
     local noButtonSize = 4
     local yesButtonSize = 5
 
     gfx.set(noButtonX, buttonsY, colors.red, colors.white, " NO ")
-    gfx.set(yesButtonX, buttonsY, colors.red, colors.white, " YES ")
+    gfx.set(yesButtonX, buttonsY, colors.green, colors.white, " YES ")
 
     local result = nil
     while true do
