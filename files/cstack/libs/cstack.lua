@@ -48,6 +48,19 @@ function cstack.saveConfig()
     return cstack.writeTable(cstack.configPath, cstack.config)
 end
 
+function cstack.getCurrentBranch()
+    return cstack.readFile("/cstack/branch.txt") or "main"
+end
+
+function cstack.getCurrentVersion()
+    return tonumber(cstack.readFile("/cstack/version.txt"))
+end
+
+function cstack.getActualVersion()
+    local url = "https://raw.githubusercontent.com/igorkll/cstack/" ..cstack.getCurrentBranch()  .. "/installer/installer.lua"
+    return tonumber()
+end
+
 if fs.exists(cstack.configPath) then
     local cfg = cstack.readTable(cstack.configPath)
     if cfg then
