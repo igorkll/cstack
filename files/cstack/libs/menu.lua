@@ -218,7 +218,7 @@ function menu.drawZoneBox(sizeX, sizeY, color)
 end
 
 function menu.message(title, ...)
-    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 8)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.9), 8)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)
@@ -249,7 +249,7 @@ function menu.message(title, ...)
 end
 
 function menu.input(title, default, hiddenChar)
-    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 4)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.9), 4)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)
@@ -293,7 +293,7 @@ function menu.input(title, default, hiddenChar)
 end
 
 function menu.yesno(title, ...)
-    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 4)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.9), 4)
     local closeButtonX = (x + sizeX) - 3
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)

@@ -24,7 +24,14 @@ for _, name in ipairs(fs.list(libsPath)) do
     _G[name] = require(libsPath .. "/" .. name)
 end
 
-shell.setPath(shell.path() .. ":/cstack/programs")
+local function addProgramsPath(path)
+    shell.setPath(shell.path() .. ":" .. path)
+end
+
+addProgramsPath("/cstack/programs")
+if turtle then
+    addProgramsPath("/cstack/programs/turtle")
+end
 
 shell.run("/cstack/shell.lua")
 term.setBackgroundColor(colors.black)
