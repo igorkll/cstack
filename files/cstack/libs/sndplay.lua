@@ -47,33 +47,23 @@ function sndplay.loadStreamFromUrl(url, chunkSize)
         end
     }
 
-    while true do
-        local chunk = response.read(chunkSize)
-        if not chunk then
-            break
-        end
-
-        local buffer = {}
-        for i = 1, #chunk do
-            buffer[i] = string.byte(chunk, i) - 128
-        end
-
-        if not speaker.playAudio(buffer) then
-            local speakerName = peripheral.getName(speaker)
-            while true do
-                local eventData = {os.pullEvent("speaker_audio_empty")}
-                if eventData[2] == speakerName then break end
-            end
-        end
-    end
-
     return stream
 end
 
-function sndplay.
+function sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+    while not speaker.playAudio(buffer) do
+        local speakerName = peripheral.getName(speaker)
+        while true do
+            local eventData = {os.pullEvent("speaker_audio_empty")}
+            if eventData[2] == speakerName then break end
+        end
+    end
+end
 
-function sndplay.playStream(stream)
-
+function sndplay.playStream(speaker, stream, loop)
+    while true do
+        sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+    end
 end
 
 return sndplay
