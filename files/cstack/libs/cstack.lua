@@ -48,6 +48,32 @@ function cstack.saveConfig()
     return cstack.writeTable(cstack.configPath, cstack.config)
 end
 
+function cstack.fetchUrl(url)
+    if not http then
+        return nil, "HTTP API unavailable"
+    end
+
+    local response, err = http.get(url)
+    if not response then
+        return nil, err
+    end
+
+    local status = response.getResponseCode()
+    if status ~= 200 then
+        response.close()
+        return nil, "HTTP Error: " .. tostring(status)
+    end
+
+    local content, readErr = response.readAll()
+    response.close()
+
+    if not content then
+        return nil, readErr or "Failed to read response"
+    end
+
+    return content
+end
+
 function cstack.getCurrentBranch()
     return cstack.readFile("/cstack/branch.txt") or "main"
 end
@@ -58,7 +84,7 @@ end
 
 function cstack.getActualVersion()
     local url = "https://raw.githubusercontent.com/igorkll/cstack/" ..cstack.getCurrentBranch()  .. "/installer/installer.lua"
-    return tonumber()
+    return tonumber(cstack.fetchUrl(url))
 end
 
 if fs.exists(cstack.configPath) then
