@@ -90,12 +90,13 @@ function cstack.getActualVersion()
 end
 
 function cstack.update()
-    local url = "https://raw.githubusercontent.com/igorkll/cstack/" ..cstack.getCurrentBranch()  .. "/installer/installer.lua"
+    local currentBranch = cstack.getCurrentBranch()
+    local url = "https://raw.githubusercontent.com/igorkll/cstack/" .. currentBranch .. "/installer/installer.lua"
     local installerCode, err = cstack.fetchUrl(url)
     if not installerCode then return nil, err end
     local installerFunc, err = load(installerCode, "=installer", "t", _ENV)
     if not installerFunc then return nil, err end
-    return pcall(installerFunc)
+    return pcall(installerFunc, currentBranch)
 end
 
 if fs.exists(cstack.configPath) then
