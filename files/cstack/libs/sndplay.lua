@@ -1,6 +1,6 @@
 local sndplay = {}
 
-function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
+function sndplay.loadStreamFromUrl(url, chunkSize)
     local response = http.get(url, nil, true)
     if not response then
         return -1
@@ -16,6 +16,37 @@ function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
         chunkSize = 16 * 1024
     end
 
+    local ended = false
+    local stream
+    stream = {
+        getBuffer = function()
+            local chunk = response.read(chunkSize)
+            if not chunk then
+                stream.close()
+                return
+            end
+
+            local buffer = {}
+            for i = 1, #chunk do
+                buffer[i] = string.byte(chunk, i) - 128
+            end
+
+            return buffer
+        end,
+        reopen = function()
+            return sndplay.loadStreamFromUrl(url, chunkSize)
+        end,
+        close = function()
+            if ended then return false end
+            response.close()
+            ended = true
+            return true
+        end,
+        isEnded = function()
+            return ended
+        end
+    }
+
     while true do
         local chunk = response.read(chunkSize)
         if not chunk then
@@ -27,16 +58,22 @@ function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
             buffer[i] = string.byte(chunk, i) - 128
         end
 
-        while not speaker.playAudio(buffer) do
-            os.pullEvent("speaker_audio_empty")
-        end
-
-        if yield then
-            yield()
+        if not speaker.playAudio(buffer) then
+            local speakerName = peripheral.getName(speaker)
+            while true do
+                local eventData = {os.pullEvent("speaker_audio_empty")}
+                if eventData[2] == speakerName then break end
+            end
         end
     end
 
-    response.close()
+    return stream
+end
+
+function sndplay.
+
+function sndplay.playStream(stream)
+
 end
 
 return sndplay
