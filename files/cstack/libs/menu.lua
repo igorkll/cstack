@@ -301,20 +301,13 @@ function menu.yesno(title, ...)
     menu.centerPrint(y, title or "yesno")
 
     local buttonsY = y + sizeY - 2
-    local noButtonX = 2
-    local yesButtonX = sizeX - 5
+    local noButtonX = x + 1
+    local yesButtonX = x + sizeX - 5
     local noButtonSize = 4
     local yesButtonSize = 5
 
     gfx.set(noButtonX, buttonsY, colors.red, colors.white, " NO ")
     gfx.set(yesButtonX, buttonsY, colors.red, colors.white, " YES ")
-
-    local currentTerm = term.current()
-    local msgWindow = window.create(currentTerm, x + 2, y + 2, sizeX - 4, sizeY - 3)
-    local blick = term.getCursorBlink()
-    term.redirect(msgWindow)
-    term.clear(colors.black)
-    print(...)
 
     local result = nil
     while true do
@@ -334,8 +327,6 @@ function menu.yesno(title, ...)
         end
     end
 
-    term.redirect(currentTerm)
-    term.setCursorBlink(blick)
     menu.defaultColors()
     return result
 end
