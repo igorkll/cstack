@@ -7,8 +7,10 @@ clear(colors.blue)
 
 ---------------------------------------
 
+local args = {...}
+
 local baseUrl = "https://raw.githubusercontent.com/igorkll/cstack/"
-local branch = "main"
+local branch = args[1] or "main"
 
 local function wget(url)
     local ok, err = assert(http.checkURL(url))
@@ -85,20 +87,36 @@ local function readWithDefault(default)
     return read()
 end
 
+local function writeFile(path, data)
+    local file = assert(fs.open(path, "wb"))
+    file.write(data)
+    file.close()
+end
+
+local function install()
+    print("start of installation")
+    downloadList(baseUrl .. branch .. "/installer/filelist.txt")
+    writeFile("/cstack/branch.txt", branch)
+end
+
 ---------------------------------------
 
 term.setBackgroundColor(colors.blue)
 print("do you really want to install cstack shell?")
 
-print("type branch name")
-branch = readWithDefault(branch)
-
-print("type 'YES' to start installation")
-if io.read() == "YES" then
-    print("start of installation")
-    downloadList(baseUrl .. branch .. "/installer/filelist.txt")
+if #args > 0 then
+    install()
     os.reboot()
 else
-    clear(colors.black)
-    print("the installation was canceled")
+    print("type branch name")
+    branch = readWithDefault(branch)
+
+    print("type 'YES' to start installation")
+    if io.read() == "YES" then
+        install()
+        os.reboot()
+    else
+        clear(colors.black)
+        print("the installation was canceled")
+    end
 end
