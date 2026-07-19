@@ -102,12 +102,13 @@ end
 ---------------------------------------
 
 term.setBackgroundColor(colors.blue)
-print("do you really want to install cstack shell?")
 
 if #args > 0 then
     install()
     os.reboot()
 else
+    print("do you really want to install cstack shell?")
+    
     print("type branch name")
     branch = readWithDefault(branch)
 
