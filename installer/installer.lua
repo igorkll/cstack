@@ -89,11 +89,14 @@ end
 
 term.setBackgroundColor(colors.blue)
 print("do you really want to install cstack shell?")
-print("type 'YES' to start installation")
 
+print("type branch name")
+branch = readWithDefault(branch)
+
+print("type 'YES' to start installation")
 if io.read() == "YES" then
     print("start of installation")
-    downloadList(baseUrl .. readWithDefault(branch) .. "/installer/filelist.txt")
+    downloadList(baseUrl .. branch .. "/installer/filelist.txt")
     os.reboot()
 else
     clear(colors.black)
