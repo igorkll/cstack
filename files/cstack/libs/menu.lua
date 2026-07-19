@@ -288,4 +288,28 @@ function menu.input(title, default, hiddenChar)
     return inputResult
 end
 
+function menu.yesno(title)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 4)
+    local closeButtonX = (x + sizeX) - 3
+    gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
+    term.setBackgroundColor(colors.gray)
+    term.setTextColor(colors.white)
+    menu.centerPrint(y, title or "yesno")
+
+    local result = nil
+    while true do
+        local eventData = {os.pullEventRaw()}
+        if eventData[1] == "mouse_click" then
+            if eventData[4] == y and eventData[3] >= closeButtonX and eventData[3] < (x + sizeX) then
+                break
+            end
+        elseif eventData[1] == "terminate" then
+            break
+        end
+    end
+
+    menu.defaultColors()
+    return result
+end
+
 return menu

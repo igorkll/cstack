@@ -79,7 +79,7 @@ local function mathElements()
     end
 end
 
-local function redraw()
+local function redraw(first)
     term.clear(colors.black)
 
     local snippets = localMathElements()
@@ -98,6 +98,14 @@ local function redraw()
             gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, title:sub(1, snippet.sizeX))
         end
     end
+
+    if first then
+        local currentVersion = cstack.getCurrentVersion()
+        local actualVersion = cstack.getActualVersion()
+        if actualVersion > currentVersion and menu.yesno("update system (" .. currentVersion .. " > " .. actualVersion .. ")?") then
+            cstack.update()
+        end
+    end
 end
 
 local function save()
@@ -107,7 +115,7 @@ local function save()
 end
 
 mathElements()
-redraw()
+redraw(true)
 
 local oldShellsCount
 while true do
