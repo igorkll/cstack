@@ -134,7 +134,7 @@ while true do
             save()
         end
     elseif eventData[1] == "mouse_click" then
-        local index, element = gui.getCollisionElement(eventData, localMathElements(), function(element)
+        local index, element = gfx.getCollisionElement(eventData, localMathElements(), function(element)
             return not element.page or element.page == currentPage
         end)
         if element then
@@ -328,7 +328,7 @@ while true do
                 })
             elseif eventData[2] == 3 then
                 if not element.pinned then
-                    gui.moveToUp(cstack.config.snippets, element)
+                    gfx.moveToUp(cstack.config.snippets, element)
                     save()
                     selectedSnipped = element
                     selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]

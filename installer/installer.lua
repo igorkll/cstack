@@ -78,6 +78,13 @@ local function downloadList(listUrl)
     end
 end
 
+local function readWithDefault(default)
+    if default then
+        os.queueEvent("paste", tostring(default))
+    end
+    return read()
+end
+
 ---------------------------------------
 
 term.setBackgroundColor(colors.blue)
@@ -86,7 +93,7 @@ print("type 'YES' to start installation")
 
 if io.read() == "YES" then
     print("start of installation")
-    downloadList(baseUrl .. branch .. "/installer/filelist.txt")
+    downloadList(baseUrl .. readWithDefault(branch) .. "/installer/filelist.txt")
     os.reboot()
 else
     clear(colors.black)
