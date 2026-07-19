@@ -6,8 +6,8 @@
 /cstack/shell.lua
 /cstack/bsod.lua
 /cstack/programs/animation.lua
-/cstack/programs/dickmaker.lua
 /cstack/programs/sndplay.lua
+/cstack/programs/turtle/dickmaker.lua
 /cstack/libs/sndplay.lua
 /cstack/libs/menu.lua
 /cstack/libs/cstack.lua
