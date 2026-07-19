@@ -79,7 +79,7 @@ local function mathElements()
     end
 end
 
-local function redraw()
+local function redraw(first)
     term.clear(colors.black)
 
     local snippets = localMathElements()
@@ -98,6 +98,20 @@ local function redraw()
             gfx.centeredText(snippet.x, snippet.y, snippet.sizeX, snippet.sizeY, snippet.color, textColor, title:sub(1, snippet.sizeX))
         end
     end
+
+    if first then
+        local currentVersion = cstack.getCurrentVersion()
+        local actualVersion = cstack.getActualVersion()
+        if actualVersion > currentVersion then
+            if menu.yesno("update (" .. currentVersion .. " > " .. actualVersion .. ")?") then
+                local ok, err = cstack.update()
+                if not ok then
+                    menu.message("failed", "failed to update\n" .. tostring(err or "unknown error"))
+                end
+            end
+            redraw()
+        end
+    end
 end
 
 local function save()
@@ -107,7 +121,7 @@ local function save()
 end
 
 mathElements()
-redraw()
+redraw(true)
 
 local oldShellsCount
 while true do
@@ -134,7 +148,7 @@ while true do
             save()
         end
     elseif eventData[1] == "mouse_click" then
-        local index, element = gui.getCollisionElement(eventData, localMathElements(), function(element)
+        local index, element = gfx.getCollisionElement(eventData, localMathElements(), function(element)
             return not element.page or element.page == currentPage
         end)
         if element then
@@ -328,7 +342,7 @@ while true do
                 })
             elseif eventData[2] == 3 then
                 if not element.pinned then
-                    gui.moveToUp(cstack.config.snippets, element)
+                    gfx.moveToUp(cstack.config.snippets, element)
                     save()
                     selectedSnipped = element
                     selectedSnippedX, selectedSnippedY = eventData[3], eventData[4]

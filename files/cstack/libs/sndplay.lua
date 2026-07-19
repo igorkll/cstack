@@ -1,9 +1,9 @@
 local sndplay = {}
 
-function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
+function sndplay.loadStreamFromUrl(url, chunkSize)
     local response = http.get(url, nil, true)
     if not response then
-        return -1
+        return "failed to load stream"
     end
 
     if response.getResponseCode() ~= 200 then
@@ -16,27 +16,69 @@ function sndplay.playAudioStreamFromUrl(speaker, url, chunkSize, yield)
         chunkSize = 16 * 1024
     end
 
-    while true do
-        local chunk = response.read(chunkSize)
-        if not chunk then
-            break
-        end
+    local ended = false
+    local stream
+    stream = {
+        getBuffer = function()
+            if ended then return end
 
-        local buffer = {}
-        for i = 1, #chunk do
-            buffer[i] = string.byte(chunk, i) - 128
-        end
+            local chunk = response.read(chunkSize)
+            if not chunk then
+                stream.close()
+                return
+            end
 
-        while not speaker.playAudio(buffer) do
-            os.pullEvent("speaker_audio_empty")
-        end
+            local buffer = {}
+            for i = 1, #chunk do
+                buffer[i] = string.byte(chunk, i) - 128
+            end
 
-        if yield then
-            yield()
+            return buffer
+        end,
+        reopen = function()
+            return sndplay.loadStreamFromUrl(url, chunkSize)
+        end,
+        close = function()
+            if ended then return false end
+            response.close()
+            ended = true
+            return true
+        end,
+        isEnded = function()
+            return ended
+        end
+    }
+
+    return stream
+end
+
+function sndplay.loadStreamFromDisk(url, chunkSize)
+
+end
+
+function sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+    while not speaker.playAudio(buffer) do
+        local speakerName = peripheral.getName(speaker)
+        while true do
+            local eventData = {os.pullEvent("speaker_audio_empty")}
+            if eventData[2] == speakerName then break end
         end
     end
+end
 
-    response.close()
+function sndplay.playStream(speaker, stream, loop)
+    while true do
+        local buffer = stream.getBuffer()
+        if buffer then
+            sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
+        else
+            if loop then
+                stream = stream.reopen()
+            else
+                return
+            end
+        end
+    end
 end
 
 return sndplay

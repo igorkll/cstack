@@ -6,45 +6,17 @@ end
 local args = { ... }
 local urlOrPath = args[1]
 
-local _print = print
-local function print(...)
-    _print(...)
+local streamOrError
+if urlOrPath then --типо проверка на начало http: https: которой пока нет
+    streamOrError = sndplay.loadStreamFromUrl(urlOrPath)
+else
+    streamOrError = sndplay.loadStreamFromDisk(urlOrPath)
 end
 
-local function playAudioStreamFromUrl(url)
-    local response = http.get(url, nil, true)
-    if not response then
-        print("Failed to load: " .. url)
-        return
-    end
-
-    if response.getResponseCode() ~= 200 then
-        print("Error: " .. response.getResponseCode())
-        response.close()
-        return
-    end
-
-    print("Start playing...")
-
-    local chunkSize = 16 * 1024
-
-    while true do
-        local chunk = response.read(chunkSize)
-        if not chunk then
-            break
-        end
-
-        local buffer = {}
-        for i = 1, #chunk do
-            buffer[i] = string.byte(chunk, i) - 128
-        end
-
-        while not speaker.playAudio(buffer) do
-            os.pullEvent("speaker_audio_empty")
-        end
-    end
-
-    response.close()
+if type(streamOrError) == "string" then
+    print("Error: ", streamOrError)
+    return
 end
 
-playAudioStreamFromUrl(urlOrPath)
+print("Starting playing...")
+sndplay.playStream(speaker, streamOrError)

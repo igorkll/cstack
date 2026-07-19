@@ -223,8 +223,10 @@ function menu.message(title, ...)
     gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
     term.setBackgroundColor(colors.gray)
     term.setTextColor(colors.white)
-    menu.centerPrint(y, title or "input")
-    local msgWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, sizeY - 3)
+    menu.centerPrint(y, title or "message")
+
+    local currentTerm = term.current()
+    local msgWindow = window.create(currentTerm, x + 2, y + 2, sizeX - 4, sizeY - 3)
     local blick = term.getCursorBlink()
     term.redirect(msgWindow)
     term.clear(colors.black)
@@ -241,7 +243,7 @@ function menu.message(title, ...)
         end
     end
 
-    term.redirect(term.native())
+    term.redirect(currentTerm)
     term.setCursorBlink(blick)
     menu.defaultColors()
 end
@@ -253,7 +255,9 @@ function menu.input(title, default, hiddenChar)
     term.setBackgroundColor(colors.gray)
     term.setTextColor(colors.white)
     menu.centerPrint(y, title or "input")
-    local readWindow = window.create(term.native(), x + 2, y + 2, sizeX - 4, 1)
+
+    local currentTerm = term.current()
+    local readWindow = window.create(currentTerm, x + 2, y + 2, sizeX - 4, 1)
     local blick = term.getCursorBlink()
     term.redirect(readWindow)
     if default then
@@ -282,10 +286,49 @@ function menu.input(title, default, hiddenChar)
         end
     end)
 
-    term.redirect(term.native())
+    term.redirect(currentTerm)
     term.setCursorBlink(blick)
     menu.defaultColors()
     return inputResult
+end
+
+function menu.yesno(title, ...)
+    local x, y, sizeX, sizeY = menu.drawZoneBox(math.floor(menu.sizeX() * 0.8), 4)
+    local closeButtonX = (x + sizeX) - 3
+    gfx.set(closeButtonX, y, colors.red, colors.white, " X ")
+    term.setBackgroundColor(colors.gray)
+    term.setTextColor(colors.white)
+    menu.centerPrint(y, title or "yesno")
+
+    local buttonsY = y + sizeY - 2
+    local noButtonX = x + 1
+    local yesButtonX = x + sizeX - 5 - 1
+    local noButtonSize = 4
+    local yesButtonSize = 5
+
+    gfx.set(noButtonX, buttonsY, colors.red, colors.white, " NO ")
+    gfx.set(yesButtonX, buttonsY, colors.green, colors.white, " YES ")
+
+    local result = nil
+    while true do
+        local eventData = {os.pullEventRaw()}
+        if eventData[1] == "mouse_click" then
+            if eventData[4] == y and eventData[3] >= closeButtonX and eventData[3] < (x + sizeX) then
+                break
+            elseif eventData[4] == buttonsY and eventData[3] >= noButtonX and eventData[3] < (noButtonX + noButtonSize) then
+                result = false
+                break
+            elseif eventData[4] == buttonsY and eventData[3] >= yesButtonX and eventData[3] < (yesButtonX + yesButtonSize) then
+                result = true
+                break
+            end
+        elseif eventData[1] == "terminate" then
+            break
+        end
+    end
+
+    menu.defaultColors()
+    return result
 end
 
 return menu
