@@ -13,6 +13,12 @@ end
 local idCounter = 0
 
 function gthread.create(func, ext, ...)
+    --[[
+        ext: {
+            term = monitorOrOtherTerminal
+        }
+    ]]
+
     local co = coroutine.create(func)
     local th = {
         id = idCounter,
