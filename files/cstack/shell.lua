@@ -102,7 +102,7 @@ local function redraw(first)
     if first then
         local currentVersion = cstack.getCurrentVersion()
         local actualVersion = cstack.getActualVersion()
-        if actualVersion > currentVersion then
+        if actualVersion and actualVersion > currentVersion then
             if menu.yesno("update (" .. currentVersion .. " > " .. actualVersion .. ")?") then
                 local ok, err = cstack.update()
                 if not ok then
