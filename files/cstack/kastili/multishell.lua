@@ -328,7 +328,7 @@ setMenuVisible(false)
 launchProcess(true, {
     ["shell"] = shell,
     ["multishell"] = multishell,
-}, args[1] or "/rom/programs/shell.lua", unpack(args, 2))
+}, "/" .. shell.resolveProgram(args[1] or "/rom/programs/shell.lua"), unpack(args, 2))
  
 -- Run processes
 while #tProcesses > 0 do

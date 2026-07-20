@@ -18,7 +18,7 @@ function gthread.createProgram(path, ext, ...) --WITH MULTISHELL SUPPORT!!!
     }
 
     return gthread.create(function(...)
-        os.run(programEnv, cstack.multishellPath, ...)
+        os.run(programEnv, cstack.multishellPath, path, ...)
     end, ext, ...)
 end
 
