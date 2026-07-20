@@ -17,7 +17,8 @@ else
     local threadExt = {
         term = monitorObj,
         monitorName = monitorName,
-        hookMonitorTouch = true
+        hookMonitorTouch = true,
+        hookKeyboard = true
     }
 
     gthread.createProgram(threadExt, unpack(args, 2))

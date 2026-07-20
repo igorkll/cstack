@@ -19,6 +19,21 @@ local function prepairEvent(th, eventTbl)
         end
     end
 
+    if th.hookKeyboard then
+        if eventTbl[1] == "char" or
+        eventTbl[1] == "key" or
+        eventTbl[1] == "key_up" then
+            return {}
+        elseif eventTbl[1] == "" then
+            if eventTbl[2] == th.monitorName then
+                return {
+                    {"mouse_click", 1, eventTbl[3], eventTbl[4]},
+                    {"mouse_up", 1, eventTbl[3], eventTbl[4]}
+                }
+            end
+        end
+    end
+
     return {eventTbl}
 end
 
