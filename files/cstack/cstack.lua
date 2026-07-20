@@ -74,7 +74,7 @@ runAutoruns()
 
 runExternalMonitors()
 
-shell.run(cstack.shellPath)
+shell.run(cstack.shellPath, "UPDATECHECK")
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)
 print("")
