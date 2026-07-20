@@ -57,7 +57,7 @@ local function prepairEvent(th, eventTbl)
         elseif text.startwith(string, eventTbl[1], tmKeyboardPrefix) then
             if isKeyboardEventToMonitor(th.monitorName, eventTbl[2]) then
                 return {
-                    {string.sub(eventTbl[1], #tmKeyboardPrefix + 1, #eventTbl[1]), 1, unpack(eventTbl, 3)},
+                    {string.sub(eventTbl[1], #tmKeyboardPrefix + 1, #eventTbl[1]), unpack(eventTbl, 3)},
                 }
             end
         end
