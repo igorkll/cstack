@@ -15,4 +15,5 @@
 /cstack/libs/gui.lua
 /cstack/libs/gfx.lua
 /cstack/libs/gthread.lua
+/cstack/kastili/shell.lua
 /cstack/kastili/multishell.lua

@@ -12,7 +12,7 @@ for _, th in ipairs(gthread.threads) do
 end
 
 if existsThread then
-    existsThread.programEnv.shell.openTab(unpack(args, 2))
+    existsThread.programEnv._newmultishellenv._newshell.openTab(unpack(args, 2))
 else
     local threadExt = {
         term = monitorObj,

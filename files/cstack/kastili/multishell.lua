@@ -325,10 +325,12 @@ end
 -- Begin
 parentTerm.clear()
 setMenuVisible(false)
-launchProcess(true, {
+
+_newmultishellenv = {
     ["shell"] = shell,
     ["multishell"] = multishell,
-}, "/rom/programs/shell.lua", unpack(args))
+}
+launchProcess(true, _newmultishellenv, "/cstack/kastili/shell.lua", unpack(args))
  
 -- Run processes
 while #tProcesses > 0 do
