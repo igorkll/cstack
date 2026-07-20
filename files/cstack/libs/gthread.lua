@@ -12,17 +12,11 @@ end
 
 local idCounter = 0
 
-function gthread.createProgram(nameOrPath, ext, ...) --WITH MULTISHELL SUPPORT!!!
-    local programEnv = {
-        ["shell"] = shell,
-        ["arg"] = {
-            [0] = nameOrPath,
-            ...
-        }
-    }
+function gthread.createProgram(ext, ...) --WITH MULTISHELL SUPPORT!!!
+    local programEnv = {}
 
     return gthread.create(function(...)
-        os.run(programEnv, cstack.multishellPath, nameOrPath, ...)
+        os.run(programEnv, cstack.multishellPath, ...)
     end, ext, ...)
 end
 
