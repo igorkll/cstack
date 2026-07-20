@@ -2,6 +2,10 @@ local gthread = {}
 gthread.threads = {}
 gthread.mainthread = coroutine.running()
 
+local function isKeyboardEventToMonitor(monitorName, keyboardName)
+    
+end
+
 local function prepairEvent(th, eventTbl)
     if th.hookMonitorTouch then
         if eventTbl[1] == "mouse_scroll" or
@@ -24,8 +28,8 @@ local function prepairEvent(th, eventTbl)
         eventTbl[1] == "key" or
         eventTbl[1] == "key_up" then
             return {}
-        elseif eventTbl[1] == "" then
-            if eventTbl[2] == th.monitorName then
+        elseif text.startwith(string, eventTbl[1], "tm_keyboard_") then
+            if isKeyboardEventToMonitor(th.monitorName, eventTbl[2]) then
                 return {
                     {"mouse_click", 1, eventTbl[3], eventTbl[4]},
                     {"mouse_up", 1, eventTbl[3], eventTbl[4]}
