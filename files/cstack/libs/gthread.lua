@@ -75,7 +75,6 @@ local function resumeThreads(eventTbl)
     end
 end
 
-local pullEventRaw = os.pullEventRaw
 os.pullEventRaw = function(sFilter)
     while true do
         local eventTbl = {coroutine.yield()}
