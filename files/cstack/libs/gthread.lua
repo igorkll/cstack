@@ -71,6 +71,7 @@ local function prepairEvent(th, eventTbl)
     if th.hookKeyboard then
         if eventTbl[1] == "char" or
         eventTbl[1] == "key" or
+        eventTbl[1] == "terminate" or --исправляю баг, что terminal в основном терминале прилетало на все мониторы. клавы от аддона выдают terminal в формате tm_keyboard_terminate и проблем нет
         eventTbl[1] == "key_up" then
             return {}
         elseif text.startwith(string, eventTbl[1], tmKeyboardPrefix) then
