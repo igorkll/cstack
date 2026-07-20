@@ -13,6 +13,7 @@
 /cstack/libs/menu.lua
 /cstack/libs/cstack.lua
 /cstack/libs/gui.lua
+/cstack/libs/text.lua
 /cstack/libs/gfx.lua
 /cstack/libs/gthread.lua
 /cstack/kastili/shell.lua
