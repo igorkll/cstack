@@ -85,10 +85,10 @@ function sndplay.playStreamOnSeveralSpeakers(speakers, stream, loop)
     while true do
         local buffer = stream.getBuffer()
         if buffer then
+            sndplay.waitIfNeedAndPlayBuffer(speakers[1], buffer)
             for i = 2, #speakers do
                 speakers[i].playAudio(buffer)
             end
-            sndplay.waitIfNeedAndPlayBuffer(speakers[1], buffer)
         else
             if loop then
                 stream = stream.reopen()
