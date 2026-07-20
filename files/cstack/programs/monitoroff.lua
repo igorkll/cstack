@@ -24,5 +24,6 @@ end
 
 print("clear monitor")
 local monitorObj = peripheral.wrap(monitorName)
+monitorObj.setBackgroundColor(colors.black)
 monitorObj.setCursorBlink(false)
 monitorObj.clear()
