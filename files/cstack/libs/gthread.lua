@@ -2,9 +2,35 @@ local gthread = {}
 gthread.threads = {}
 gthread.mainthread = coroutine.running()
 
+local directNamesList = {
+    "top",
+    "bottom",
+    "left",
+    "right",
+    "back",
+    "front"
+}
+
+--если монитор или клавиатура подключены напрямую к ПК то событие пройдет
+--если оба подключены через модем, то индекс должен быть одинаковым
 local function isKeyboardEventToMonitor(monitorName, keyboardName)
-    
+    for _, directName in ipairs(directNamesList) do
+        if directName == monitorName or directName == keyboardName then
+            return true
+        end
+    end
+
+    local monitorIndex = text.split(string, monitorName, "_")[2]
+    local keyboardIndex = text.split(string, keyboardName, "_")[2]
+
+    if monitorIndex == keyboardIndex then
+        return true
+    end
+
+    return false
 end
+
+local tmKeyboardPrefix = "tm_keyboard_"
 
 local function prepairEvent(th, eventTbl)
     if th.hookMonitorTouch then
@@ -28,11 +54,10 @@ local function prepairEvent(th, eventTbl)
         eventTbl[1] == "key" or
         eventTbl[1] == "key_up" then
             return {}
-        elseif text.startwith(string, eventTbl[1], "tm_keyboard_") then
+        elseif text.startwith(string, eventTbl[1], tmKeyboardPrefix) then
             if isKeyboardEventToMonitor(th.monitorName, eventTbl[2]) then
                 return {
-                    {"mouse_click", 1, eventTbl[3], eventTbl[4]},
-                    {"mouse_up", 1, eventTbl[3], eventTbl[4]}
+                    {string.sub(eventTbl[1], #tmKeyboardPrefix + 1, #eventTbl[1]), 1, unpack(eventTbl, 3)},
                 }
             end
         end
