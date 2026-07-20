@@ -10,6 +10,7 @@ elseif #args == 1 then
     urlOrPath = args[1]
 else
     print("sndplay [speaker] <url>")
+    return
 end
 
 if not speaker then
