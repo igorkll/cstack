@@ -12,7 +12,7 @@ for _, th in ipairs(gthread.threads) do
 end
 
 if existsThread then
-    existsThread.programEnv._newmultishellenv._newshell.openTab(unpack(args, 2))
+    existsThread.programEnv._newmultishellenv._newshell.openTab(args[2] or "/cstack/kastili/shell.lua",unpack(args, 3))
 else
     local threadExt = {
         term = monitorObj,
