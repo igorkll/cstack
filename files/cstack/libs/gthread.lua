@@ -108,7 +108,6 @@ function gthread.createProgram(ext, ...) --WITH MULTISHELL SUPPORT!!!
 end
 
 function gthread.createMonitorProgram(monitorName, selectTab, programName, ...)
-    local monitorName = args[1]
     local monitorObj = peripheral.wrap(monitorName)
 
     local existsThread
@@ -120,9 +119,10 @@ function gthread.createMonitorProgram(monitorName, selectTab, programName, ...)
     end
 
     if existsThread then
-        local nTask = existsThread.programEnv._newmultishellenv._newshell.openTab(programName or "/cstack/kastili/shell.lua", ...)
+        local newshell = existsThread.programEnv._newmultishellenv._newshell
+        local nTask = newshell.openTab(programName or "/cstack/kastili/shell.lua", ...)
         if nTask and selectTab then
-            shell.switchTab(nTask)
+            newshell.switchTab(nTask)
         end
 
         return existsThread
