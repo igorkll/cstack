@@ -2,31 +2,43 @@ if not term.isColor() then
     shell.run("/cstack/bsod.lua", "\"device is not supported\"", "\"screen is not colored\"")
 end
 
-local settingsFlag = "cstack.settingsApplied"
-if not settings.get(settingsFlag, false) then
-    settings.clear()
-    settings.set("shell.allow_disk_startup", false)
-    settings.set("shell.allow_startup", true)
-    settings.set("bios.use_multishell", true)
-    settings.set("list.show_hidden", true)
-    settings.set("shell.autocomplete_hidden", true)
-    settings.set(settingsFlag, true)
-    settings.save()
-    os.reboot()
-end
-
 fs.makeDir("/cstackData")
 shell.setDir("/cstackData")
 
-local libsPath = "/cstack/libs"
-for _, name in ipairs(fs.list(libsPath)) do
-    name = name:sub(1, #name - 4)
-    _G[name] = require(libsPath .. "/" .. name)
+local function loadLibs()
+    local libsPath = "/cstack/libs"
+    for _, name in ipairs(fs.list(libsPath)) do
+        name = name:sub(1, #name - 4)
+        _G[name] = require(libsPath .. "/" .. name)
+    end
 end
 
 local function addProgramsPath(path)
     shell.setPath(shell.path() .. ":" .. path)
 end
+
+local function updateSettings()
+    local settingsFlag = "cstack.settingsApplied"
+    local settingsVersion = "cstack.settingsVersion"
+    local currentVersion = cstack.getCurrentVersion()
+    
+    if not settings.get(settingsFlag, false) or
+        settings.get(settingsVersion, -1) != currentVersion then
+        settings.clear()
+        settings.set("shell.allow_disk_startup", false)
+        settings.set("shell.allow_startup", true)
+        settings.set("bios.use_multishell", true)
+        settings.set("list.show_hidden", true)
+        settings.set(settingsFlag, true)
+        settings.set(settingsVersion, currentVersion)
+        settings.save()
+        os.reboot()
+    end
+end
+
+loadLibs()
+
+updateSettings()
 
 addProgramsPath("/cstack/programs")
 if turtle then
