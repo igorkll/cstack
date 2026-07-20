@@ -2,31 +2,79 @@ if not term.isColor() then
     shell.run("/cstack/bsod.lua", "\"device is not supported\"", "\"screen is not colored\"")
 end
 
-local settingsFlag = "cstack.settingsApplied"
-if not settings.get(settingsFlag, false) then
-    settings.clear()
-    settings.set("shell.allow_disk_startup", false)
-    settings.set("shell.allow_startup", true)
-    settings.set("bios.use_multishell", true)
-    settings.set("list.show_hidden", true)
-    settings.set("shell.autocomplete_hidden", true)
-    settings.set(settingsFlag, true)
-    settings.save()
-    os.reboot()
-end
-
 fs.makeDir("/cstackData")
+fs.makeDir("/cstackData/autorun")
 shell.setDir("/cstackData")
 
-local libsPath = "/cstack/libs"
-for _, name in ipairs(fs.list(libsPath)) do
-    name = name:sub(1, #name - 4)
-    _G[name] = require(libsPath .. "/" .. name)
+local function loadLibs()
+    local libsPath = "/cstack/libs"
+    for _, name in ipairs(fs.list(libsPath)) do
+        name = name:sub(1, #name - 4)
+        _G[name] = require(libsPath .. "/" .. name)
+    end
 end
 
-shell.setPath(shell.path() .. ":/cstack/programs")
+local function addProgramsPath(path)
+    shell.setPath(shell.path() .. ":" .. path)
+end
 
-shell.run("/cstack/shell.lua")
+local function updateSettings()
+    local settingsFlag = "cstack.settingsApplied"
+    local settingsVersion = "cstack.settingsVersion"
+    local currentVersion = cstack.getCurrentVersion()
+
+    if not settings.get(settingsFlag, false) or
+        settings.get(settingsVersion, -1) ~= currentVersion then
+        settings.clear()
+        settings.set("shell.allow_disk_startup", false)
+        settings.set("shell.allow_startup", true)
+        settings.set("bios.use_multishell", true)
+        settings.set(settingsFlag, true)
+        settings.set(settingsVersion, currentVersion)
+        settings.save()
+        os.reboot()
+    end
+end
+
+local function runAutorunsFromPath(autorunsPath)
+    for _, autorunName in pairs(fs.list(autorunsPath)) do
+        shell.run("/" .. fs.combine(autorunsPath, autorunName))
+    end
+end
+
+local function runAutoruns()
+    local autorunsPaths = {
+        "/cstack/autorun",
+        "/cstackData/autorun"
+    }
+
+    for _, autorunsPath in ipairs(autorunsPaths) do
+        if fs.isDir(autorunsPath) then
+            runAutorunsFromPath(autorunsPath)
+        end
+    end
+end
+
+local function runExternalMonitors()
+    for _, monitor in ipairs({peripheral.find("monitor")}) do
+        local monitorName = peripheral.getName(monitor)
+        shell.run("monitorbg " .. monitorName .. " " .. cstack.shellPath)
+    end
+end
+
+loadLibs()
+updateSettings()
+
+addProgramsPath("/cstack/programs")
+if turtle then
+    addProgramsPath("/cstack/programs/turtle")
+end
+
+runAutoruns()
+
+runExternalMonitors()
+
+shell.run(cstack.shellPath, "UPDATECHECK")
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)
 print("")

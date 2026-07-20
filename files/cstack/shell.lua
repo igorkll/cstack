@@ -1,5 +1,7 @@
 multishell.setTitle(multishell.getCurrent(), "cstack")
 
+local args = {...}
+
 local currentPage = 0
 local selectedSnippedX, selectedSnippedY, selectedSnipped
 local builtinFunctions = {
@@ -99,10 +101,10 @@ local function redraw(first)
         end
     end
 
-    if first then
+    if first and args[1] == "UPDATECHECK" then
         local currentVersion = cstack.getCurrentVersion()
         local actualVersion = cstack.getActualVersion()
-        if actualVersion > currentVersion then
+        if actualVersion and actualVersion > currentVersion then
             if menu.yesno("update (" .. currentVersion .. " > " .. actualVersion .. ")?") then
                 local ok, err = cstack.update()
                 if not ok then

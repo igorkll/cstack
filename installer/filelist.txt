@@ -6,11 +6,15 @@
 /cstack/shell.lua
 /cstack/bsod.lua
 /cstack/programs/animation.lua
-/cstack/programs/dickmaker.lua
 /cstack/programs/sndplay.lua
+/cstack/programs/monitorbg.lua
+/cstack/programs/turtle/dickmaker.lua
 /cstack/libs/sndplay.lua
 /cstack/libs/menu.lua
 /cstack/libs/cstack.lua
 /cstack/libs/gui.lua
+/cstack/libs/text.lua
 /cstack/libs/gfx.lua
 /cstack/libs/gthread.lua
+/cstack/kastili/shell.lua
+/cstack/kastili/multishell.lua
