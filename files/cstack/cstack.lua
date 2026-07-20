@@ -49,7 +49,7 @@ local function runAutoruns()
     }
 
     for _, autorunsPath in ipairs(autorunsPaths) do
-        if fs.isDirectory(autorunsPath) then
+        if fs.isDir(autorunsPath) then
             runAutorunsFromPath(autorunsPath)
         end
     end
