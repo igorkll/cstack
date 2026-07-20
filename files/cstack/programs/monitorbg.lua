@@ -1,3 +1,10 @@
 local args = {...}
 
-gthread.createProgram(args[2], peripheral.wrap(args[1]), unpack(args, 3))
+local monitorName = args[1]
+local monitorObj = peripheral.wrap(monitorName)
+
+local threadExt = {
+    term = monitorObj
+}
+
+gthread.createProgram(args[2], threadExt, unpack(args, 3))
