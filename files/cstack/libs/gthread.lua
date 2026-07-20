@@ -20,8 +20,11 @@ local function isKeyboardEventToMonitor(monitorName, keyboardName)
         end
     end
 
-    local monitorIndex = text.split(string, monitorName, "_")[2]
-    local keyboardIndex = text.split(string, keyboardName, "_")[2]
+    local monitorIndex = text.split(string, monitorName, "_")
+    monitorIndex = monitorIndex[#monitorIndex]
+
+    local keyboardIndex = text.split(string, keyboardName, "_")
+    keyboardIndex = keyboardIndex[#keyboardIndex]
 
     if monitorIndex == keyboardIndex then
         return true
