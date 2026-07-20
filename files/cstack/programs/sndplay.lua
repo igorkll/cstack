@@ -7,7 +7,8 @@ local args = { ... }
 local urlOrPath = args[1]
 
 local streamOrError
-if urlOrPath then --типо проверка на начало http: https: которой пока нет
+if text.startwith(string, urlOrPath, "http:") or 
+    text.startwith(string, urlOrPath, "https:") then
     print("Loading stream from url (" .. urlOrPath .. ")...")
     streamOrError = sndplay.loadStreamFromUrl(urlOrPath)
 else
