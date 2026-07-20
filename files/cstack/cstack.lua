@@ -55,6 +55,13 @@ local function runAutoruns()
     end
 end
 
+local function runExternalMonitors()
+    for _, monitor in ipairs({peripheral.find("monitor")}) do
+        local monitorName = peripheral.getName(monitor)
+        shell.run("monitorbg " .. monitorName .. " " .. cstack.shellPath)
+    end
+end
+
 loadLibs()
 updateSettings()
 
@@ -65,7 +72,9 @@ end
 
 runAutoruns()
 
-shell.run("/cstack/shell.lua")
+runExternalMonitors()
+
+shell.run(cstack.shellPath)
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)
 print("")

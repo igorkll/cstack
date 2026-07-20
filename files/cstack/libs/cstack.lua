@@ -2,6 +2,7 @@ local cstack = {}
 cstack.configPath = "/cstackData/.cstackSettings"
 cstack.defaultConfig = assert(loadfile("/cstack/default.lua", nil, _ENV))()
 cstack.multishellPath = "/cstack/kastili/multishell.lua"
+cstack.shellPath = "/cstack/shell.lua"
 
 function cstack.clone(tbl)
     local newtbl = {}
