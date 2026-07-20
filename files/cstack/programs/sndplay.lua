@@ -1,5 +1,6 @@
 local speaker = peripheral.find("speaker")
 if not speaker then
+    print("Speaker not found!")
     return
 end
 
