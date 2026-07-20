@@ -16,7 +16,8 @@ if existsThread then
 else
     local threadExt = {
         term = monitorObj,
-        monitorName = monitorName
+        monitorName = monitorName,
+        hookMonitorTouch = true
     }
 
     gthread.createProgram(threadExt, unpack(args, 2))

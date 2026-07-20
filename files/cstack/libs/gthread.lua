@@ -2,6 +2,24 @@ local gthread = {}
 gthread.threads = {}
 gthread.mainthread = coroutine.running()
 
+local function prepairEvent(th, eventTbl)
+    if th.hookMonitorTouch then
+        if eventTbl[1] == "mouse_scroll" or
+        eventTbl[1] == "mouse_drag" or
+        eventTbl[1] == "mouse_up" or
+        eventTbl[1] == "mouse_click" then
+            return {}
+        elseif eventTbl[1] == "monitor_click" then
+            return {
+                {"mouse_click", 1, eventTbl[3], eventTbl[4]},
+                {"mouse_up", 1, eventTbl[3], eventTbl[4]}
+            }
+        end
+    end
+
+    return {eventTbl}
+end
+
 local function rawResume(th, ...)
     local _t = term.current()
     term.redirect(th.term or term.native())
@@ -68,11 +86,15 @@ local function resumeThreads(eventTbl)
         if th.dead then
             table.remove(gthread.threads, i)
         else
-            local coReturn = rawResume(th, unpack(eventTbl))
+            local resumeEvents = prepairEvent(th, eventTbl)
+            for _, resumeEvent in ipairs(resumeEvents) do
+                local coReturn = rawResume(th, unpack(resumeEvent))
 
-            if coroutine.status(th.co) == "dead" then
-                th.dead = true
-                th.deadReason = coReturn
+                if coroutine.status(th.co) == "dead" then
+                    th.dead = true
+                    th.deadReason = coReturn
+                    break
+                end
             end
         end
     end
@@ -86,7 +108,7 @@ os.pullEventRaw = function(sFilter)
             resumeThreads(eventTbl) --значит эвент прилетел с computercraft, разпостроняем его по потокам
         end
 
-        if not sFilter or eventTbl[1] == sFilter then
+        if eventTbl[1] and not sFilter or eventTbl[1] == sFilter then
             return unpack(eventTbl)
         end
     end
