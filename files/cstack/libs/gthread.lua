@@ -37,13 +37,20 @@ local function prepairEvent(th, eventTbl)
         if eventTbl[1] == "mouse_scroll" or
         eventTbl[1] == "mouse_drag" or
         eventTbl[1] == "mouse_up" or
-        eventTbl[1] == "mouse_click" then
+        eventTbl[1] == "mouse_click" or
+        eventTbl[1] == "term_resize" then
             return {}
         elseif eventTbl[1] == "monitor_touch" then
             if eventTbl[2] == th.monitorName then
                 return {
                     {"mouse_click", 1, eventTbl[3], eventTbl[4]},
                     {"mouse_up", 1, eventTbl[3], eventTbl[4]}
+                }
+            end
+        elseif eventTbl[1] == "monitor_resize" then
+            if eventTbl[2] == th.monitorName then
+                return {
+                    {"term_resize"}
                 }
             end
         end
