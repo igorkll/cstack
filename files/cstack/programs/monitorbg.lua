@@ -7,4 +7,4 @@ local threadExt = {
     term = monitorObj
 }
 
-gthread.createProgram(args[2], threadExt, unpack(args, 3))
+gthread.createProgram(threadExt, unpack(args, 2))
