@@ -9,6 +9,7 @@
 /cstack/programs/sndplay.lua
 /cstack/programs/monitorbg.lua
 /cstack/programs/monitorfg.lua
+/cstack/programs/monitoroff.lua
 /cstack/programs/turtle/dickmaker.lua
 /cstack/libs/sndplay.lua
 /cstack/libs/menu.lua
