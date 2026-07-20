@@ -1,19 +1,19 @@
 local args = { ... }
 
-local speaker
+local speakers = {}
 local urlOrPath
 if #args == 2 then
-    speaker = peripheral.wrap(args[1])
+    speakers = {peripheral.wrap(args[1])}
     urlOrPath = args[2]
 elseif #args == 1 then
-    speaker = peripheral.find("speaker")
+    speakers = {peripheral.find("speaker")} --get all speakers
     urlOrPath = args[1]
 else
     print("sndplay [speaker] <url>")
     return
 end
 
-if not speaker then
+if #speakers == 0 then
     print("Speaker not found!")
     return
 end
@@ -34,4 +34,4 @@ if type(streamOrError) == "string" then
 end
 
 print("Starting playing...")
-sndplay.playStream(speaker, streamOrError)
+sndplay.playStreamOnSeveralSpeakers(speakers, streamOrError)
