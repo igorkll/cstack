@@ -95,6 +95,7 @@ end
 
 local function install()
     print("start of installation")
+    fs.delete("/cstack")
     downloadList(baseUrl .. branch .. "/installer/filelist.txt")
     writeFile("/cstack/branch.txt", branch)
 end
