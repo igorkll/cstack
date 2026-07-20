@@ -15,7 +15,7 @@ local directNamesList = {
 --если оба подключены через модем, то индекс должен быть одинаковым
 local function isKeyboardEventToMonitor(monitorName, keyboardName)
     for _, directName in ipairs(directNamesList) do
-        if directName == monitorName or directName == keyboardName then
+        if directName == monitorName and directName == keyboardName then
             return true
         end
     end
