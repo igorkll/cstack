@@ -24,7 +24,7 @@ local function updateSettings()
     local currentVersion = cstack.getCurrentVersion()
 
     if not settings.get(settingsFlag, false) or
-        settings.get(settingsVersion, -1) != currentVersion then
+        settings.get(settingsVersion, -1) ~= currentVersion then
         settings.clear()
         settings.set("shell.allow_disk_startup", false)
         settings.set("shell.allow_startup", true)
