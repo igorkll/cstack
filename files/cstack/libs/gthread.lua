@@ -71,6 +71,7 @@ local function prepairEvent(th, eventTbl)
     if th.hookKeyboard then
         if eventTbl[1] == "char" or
         eventTbl[1] == "key" or
+        eventTbl[1] == "terminate" or --исправляю баг, что terminal в основном терминале прилетало на все мониторы. клавы от аддона выдают terminal в формате tm_keyboard_terminate и проблем нет
         eventTbl[1] == "key_up" then
             return {}
         elseif text.startwith(string, eventTbl[1], tmKeyboardPrefix) then
@@ -104,6 +105,37 @@ function gthread.createProgram(ext, ...) --WITH MULTISHELL SUPPORT!!!
     th.programEnv = programEnv
 
     return th
+end
+
+function gthread.createMonitorProgram(monitorName, selectTab, programName, ...)
+    local monitorObj = peripheral.wrap(monitorName)
+
+    local existsThread
+    for _, th in ipairs(gthread.threads) do
+        if th.monitorName == monitorName then
+            existsThread = th
+            break
+        end
+    end
+
+    if existsThread then
+        local newshell = existsThread.programEnv._newmultishellenv._newshell
+        local nTask = newshell.openTab(programName or "/cstack/kastili/shell.lua", ...)
+        if nTask and selectTab then
+            newshell.switchTab(nTask)
+        end
+
+        return existsThread
+    else
+        local threadExt = {
+            term = monitorObj,
+            monitorName = monitorName,
+            hookMonitorTouch = true,
+            hookKeyboard = true
+        }
+
+        return gthread.createProgram(threadExt, programName, ...)
+    end
 end
 
 function gthread.create(func, ext, ...)

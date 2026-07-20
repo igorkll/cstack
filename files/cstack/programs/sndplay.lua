@@ -1,13 +1,26 @@
-local speaker = peripheral.find("speaker")
-if not speaker then
+local args = { ... }
+
+local speaker
+local urlOrPath
+if #args == 2 then
+    speaker = peripheral.wrap(args[1])
+    urlOrPath = args[2]
+elseif #args == 1 then
+    speaker = peripheral.find("speaker")
+    urlOrPath = args[1]
+else
+    print("sndplay [speaker] <url>")
     return
 end
 
-local args = { ... }
-local urlOrPath = args[1]
+if not speaker then
+    print("Speaker not found!")
+    return
+end
 
 local streamOrError
-if urlOrPath then --типо проверка на начало http: https: которой пока нет
+if text.startwith(string, urlOrPath, "http://") or 
+    text.startwith(string, urlOrPath, "https://") then
     print("Loading stream from url (" .. urlOrPath .. ")...")
     streamOrError = sndplay.loadStreamFromUrl(urlOrPath)
 else
