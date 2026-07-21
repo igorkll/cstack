@@ -66,6 +66,13 @@ function sndplay.waitIfNeedAndPlayBuffer(speaker, buffer)
     end
 end
 
+function sndplay.waitIfNeedAndPlayBufferOnSeveralSpeakers(speakers, buffer)
+    sndplay.waitIfNeedAndPlayBuffer(speakers[1], buffer)
+    for i = 2, #speakers do
+        speakers[i].playAudio(buffer)
+    end
+end
+
 function sndplay.playStream(speaker, stream, loop)
     while true do
         local buffer = stream.getBuffer()
