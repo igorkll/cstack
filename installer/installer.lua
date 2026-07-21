@@ -11,6 +11,8 @@ local args = {...}
 
 local baseUrl = "https://raw.githubusercontent.com/igorkll/cstack/"
 local branch = args[1] or "main"
+local baseFolder = "/cstack"
+local progname = "cstack shell"
 
 local function wget(url)
     local ok, err = assert(http.checkURL(url))
@@ -95,9 +97,9 @@ end
 
 local function install()
     print("start of installation")
-    fs.delete("/cstack")
+    fs.delete(baseFolder)
     downloadList(baseUrl .. branch .. "/installer/filelist.txt")
-    writeFile("/cstack/branch.txt", branch)
+    writeFile(baseFolder .. "/branch.txt", branch)
 end
 
 ---------------------------------------
@@ -108,7 +110,7 @@ if #args > 0 then
     install()
     os.reboot()
 else
-    print("do you really want to install cstack shell?")
+    print("do you really want to install " .. progname .. "?")
     
     print("type branch name")
     branch = readWithDefault(branch)
